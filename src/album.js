@@ -14,16 +14,23 @@ export default class Album extends React.Component {
     this.request_allAlbumPhotos = this.request_allAlbumPhotos.bind(this);
   }
 
-  request_albums() {
+  request_albums(nextPageToken) {
+    var params = {};
+    if (nextPageToken != undefined && typeof nextPageToken == "string") {
+      params.pageToken = nextPageToken;
+    }
     var request = gapi.client.request({
       'method': 'GET',
-      'path': 'https://photoslibrary.googleapis.com/v1/albums'
+      'path': 'https://photoslibrary.googleapis.com/v1/albums',
+      params: params
     });
     var component = this;
     // Execute the API request.
     request.execute(function (response) {
-      console.log(response);
-      component.setState({ albums: response.albums });
+      component.setState({ albums: component.state.albums.concat(response.albums) });
+      if (response.nextPageToken != undefined) {
+        component.request_albums(response.nextPageToken);
+      }
     });
   }
 
