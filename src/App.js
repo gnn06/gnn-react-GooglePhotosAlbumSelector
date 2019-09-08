@@ -96,7 +96,7 @@ class ImageList extends React.Component {
       isAuthorized = false;
     }
   }
-  
+
   /*sendAuthorizedApiRequest(requestDetails) {
     currentApiRequest = requestDetails;
     if (isAuthorized) {
@@ -108,7 +108,7 @@ class ImageList extends React.Component {
     } else {
       GoogleAuth.signIn();
     }
-  }*/  
+  }*/
 
   setSigninStatus() {
     var user = GoogleAuth.currentUser.get();
@@ -133,8 +133,8 @@ class ImageList extends React.Component {
     return <div>
       <button onClick={this.signin}>sign in</button>
       <button onClick={this.signout}>sign out</button>
-      <User/>
-      <Album/>
+      <User />
+      <Album />
       <button onClick={this.request_photos}>request photo</button>
       <div class="grille">{this.state.photos.slice(0, 5).map((item) => <Image item={item} />)}</div>
     </div>;
