@@ -47,11 +47,14 @@ export default class Album extends React.Component {
     });
     request.execute(function (response) {
       let albums = component.state.albums;
-      if (album.photos) {
-        album.photos = album.photos.concat(response.mediaItems);
-      } else {
-        album.photos = response.mediaItems;
-      }
+      if (Array.isArray(response.mediaItems)) {
+          let photos = response.mediaItems.map(photo => { return { id: photo.id }; });
+          if (album.photos) {        
+            album.photos = album.photos.concat(photos);
+          } else {
+            album.photos = photos;
+          }
+        }
       component.setState({ albums: albums });
       if (response.nextPageToken) {
         component.request_albumPhotos(album, response.nextPageToken);
