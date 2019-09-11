@@ -3,47 +3,22 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Album from './album.js';
+import ImageList from './photoList.js';
 
 var GoogleAuth; // Google Auth object.
 var isAuthorized;
 var currentApiRequest;
 
-function photoInPhotos(photoId, photos) {
-  if (photos != null) {
-    return photos.some(item => item.id == photoId);
-  } else
-    return false;
+function User() {
+  return <span>user</span>;
 }
 
-function findAlbums(photoId) {
-  //return albums.filter(item => photoInPhotos(photoId, item.photos));
-}
+class App extends React.Component {
 
-function Image(props) {
-  console.log(props.item);
-  return <div class="image-with-flag"><img src={props.item.baseUrl} /></div>;
-}
-
-class ImageList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      photos: []
-    };
-    this.request_photos = this.request_photos.bind(this);
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     gapi.load('client', this.start);
-  }
-
-  signin() {
-    console.log('sign in start');
-    GoogleAuth.signIn();
-    console.log('signin end');
-  }
-
-  signout() {
-    console.log('sign out');
-    GoogleAuth.signOut();
   }
 
   start() {
@@ -67,48 +42,16 @@ class ImageList extends React.Component {
     });
   };
 
-  request_photos() {
-    console.log('rquest photos');
-    var component = this;
-    var request = gapi.client.request({
-      'method': 'POST',
-      'path': 'https://photoslibrary.googleapis.com/v1/mediaItems:search',
-      'params': { "albumId": "ADoMfeTjMuoeBlhVO6malM99rD746uYMCZ71zYLVwmkZUP3hvlPod7jk0DyrzoPFtnI70-5JPLT4" }
-    });
-    // Execute the API request.
-    request.execute(function (response) {
-      console.log(response);
-      component.setState({
-        photos: [{ baseUrl: response.mediaItems[0].baseUrl, albums: ["goi"] },
-        { baseUrl: response.mediaItems[1].baseUrl, albums: ["goi"] }]
-      });
-    });
+  signin() {
+    console.log('sign in start');
+    GoogleAuth.signIn();
+    console.log('signin end');
   }
 
-  updateSigninStatus(isSignedIn) {
-    console.log('updateListener');
-    if (isSignedIn) {
-      isAuthorized = true;
-      if (currentApiRequest) {
-        sendAuthorizedApiRequest(currentApiRequest);
-      }
-    } else {
-      isAuthorized = false;
-    }
+  signout() {
+    console.log('sign out');
+    GoogleAuth.signOut();
   }
-
-  /*sendAuthorizedApiRequest(requestDetails) {
-    currentApiRequest = requestDetails;
-    if (isAuthorized) {
-      // Make API request
-      gapi.client.request(requestDetails)
-  
-      // Reset currentApiRequest variable.
-      currentApiRequest = {};
-    } else {
-      GoogleAuth.signIn();
-    }
-  }*/
 
   setSigninStatus() {
     var user = GoogleAuth.currentUser.get();
@@ -125,32 +68,29 @@ class ImageList extends React.Component {
     }
   }
 
-  render() {
-    //console.log(photos.slice(0, 2));
-    //console.log(albums);
-    //console.log(findAlbums(photos[0].id));
-    //return <div class="grille">{photos.slice(0,2).map((item) => <Image item={item}/>)}</div>;
-    return <div>
-      <button onClick={this.signin}>sign in</button>
-      <button onClick={this.signout}>sign out</button>
-      <User />
-      <Album />
-      <button onClick={this.request_photos}>request photo</button>
-      <div class="grille">{this.state.photos.slice(0, 5).map((item) => <Image item={item} />)}</div>
-    </div>;
+  updateSigninStatus(isSignedIn) {
+    console.log('updateListener');
+    if (isSignedIn) {
+      isAuthorized = true;
+      if (currentApiRequest) {
+        sendAuthorizedApiRequest(currentApiRequest);
+      }
+    } else {
+      isAuthorized = false;
+    }
   }
-}
 
-function User() {
-  return <span>user</span>;
-}
-
-function App() {
-  return (
-    <div className="App">
-      <ImageList />
-    </div>
-  );
+  render () {
+    return (
+      <div className="App">
+        <button onClick={this.signin}>sign in</button>
+        <button onClick={this.signout}>sign out</button>
+        <User />
+        <Album />
+        <ImageList />
+      </div>
+    );
+  }
 }
 
 export default App;
