@@ -36,6 +36,19 @@ export default class Album extends React.Component {
 
   request_albumPhotos(album, nextPageToken) {
     let component = this;
+    // if album is already loaded, then abort
+    if (album.photos != undefined && 
+        album.photos.length == album.mediaItemsCount)
+    {
+      return;
+    }
+    // reset photos array when starting to load photos
+    // usefull if an exception occured préviously
+    if (nextPageToken == undefined) {
+      let albums = this.state.albums;
+      album.photos = [];
+      this.setState({ albums : albums });
+    }
     let params = { albumId: album.id };
     if (nextPageToken != undefined) {
       params.pageToken = nextPageToken;
@@ -46,12 +59,12 @@ export default class Album extends React.Component {
       params: params
     });
     request.execute(function (response) {
-      let albums = component.state.albums;
       if (album.photos) {
         album.photos = album.photos.concat(response.mediaItems);
       } else {
         album.photos = response.mediaItems;
       }
+      let albums = component.state.albums;
       component.setState({ albums: albums });
       if (response.nextPageToken) {
         component.request_albumPhotos(album, response.nextPageToken);
