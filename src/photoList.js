@@ -12,6 +12,12 @@ function photoInPhotos(photoId, photos) {
     return false;
 }
 
+function flagPhotoWithAlbum(photoList, albums) {
+  photoList.forEach(element => {
+    element.albums = [ 'goi' ];
+  });
+}
+
 export default class ImageList extends React.Component {
   constructor(props) {
     super(props);
@@ -35,10 +41,11 @@ export default class ImageList extends React.Component {
     });
     // Execute the API request.
     request.execute(function (response) {
-      let photoList = component.state.photos;
-      photoList = photoList.concat(response.mediaItems);
+      const statePhotoList = component.state.photos;
+      flagPhotoWithAlbum(statePhotoList, []);
+      const newPhotoList = statePhotoList.concat(response.mediaItems);
       component.setState({
-        photos: photoList,
+        photos: newPhotoList,
         nextPageToken : response.nextPageToken
       });
     });
@@ -58,10 +65,6 @@ export default class ImageList extends React.Component {
   }*/
 
   render() {
-    //console.log(photos.slice(0, 2));
-    //console.log(albums);
-    //console.log(findAlbums(photos[0].id));
-    //return <div class="grille">{photos.slice(0,2).map((item) => <Image item={item}/>)}</div>;
     return <div>
       <div class="grille">{this.state.photos.map((item) => <Image item={item} />)}</div>
       <button onClick={this.request_photos}>request photo</button>
