@@ -69,7 +69,6 @@ export default class Album extends React.Component {
             album.photos = photos;
           }
         }
-      let albums = component.state.albums;
       component.setState({ albums: albums });
       if (response.nextPageToken) {
         component.request_albumPhotos(album, response.nextPageToken);
