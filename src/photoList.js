@@ -22,19 +22,24 @@ export default class ImageList extends React.Component {
   }
 
   request_photos() {
-    console.log('rquest photos');
     var component = this;
+    const nextPageToken = this.state.nextPageToken;
+    let params = {};
+    if (nextPageToken != undefined) {
+      params.pageToken = nextPageToken;
+    }
     var request = gapi.client.request({
-      'method': 'POST',
-      'path': 'https://photoslibrary.googleapis.com/v1/mediaItems:search',
-      'params': { "albumId": "ADoMfeTjMuoeBlhVO6malM99rD746uYMCZ71zYLVwmkZUP3hvlPod7jk0DyrzoPFtnI70-5JPLT4" }
+      'method': 'GET',
+      'path': 'https://photoslibrary.googleapis.com/v1/mediaItems',
+      params: params
     });
     // Execute the API request.
     request.execute(function (response) {
-      console.log(response);
+      let photoList = component.state.photos;
+      photoList = photoList.concat(response.mediaItems);
       component.setState({
-        photos: [{ baseUrl: response.mediaItems[0].baseUrl, albums: ["goi"] },
-        { baseUrl: response.mediaItems[1].baseUrl, albums: ["goi"] }]
+        photos: photoList,
+        nextPageToken : response.nextPageToken
       });
     });
   }
@@ -58,14 +63,14 @@ export default class ImageList extends React.Component {
     //console.log(findAlbums(photos[0].id));
     //return <div class="grille">{photos.slice(0,2).map((item) => <Image item={item}/>)}</div>;
     return <div>
+      <div class="grille">{this.state.photos.map((item) => <Image item={item} />)}</div>
       <button onClick={this.request_photos}>request photo</button>
-      <div class="grille">{this.state.photos.slice(0, 5).map((item) => <Image item={item} />)}</div>
+      
     </div>;
   }
 }
 
 function Image(props) {
-  console.log(props.item);
   return <div class="image-with-flag"><img src={props.item.baseUrl} /></div>;
 }
 
