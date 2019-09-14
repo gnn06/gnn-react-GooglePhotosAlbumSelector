@@ -17,6 +17,9 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      albums: []
+    };
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     gapi.load('client', this.start);
   }
@@ -86,7 +89,7 @@ class App extends React.Component {
         <button onClick={this.signin}>sign in</button>
         <button onClick={this.signout}>sign out</button>
         <User />
-        <Album />
+        <Album parent={this} />
         <ImageList />
       </div>
     );

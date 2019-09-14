@@ -5,9 +5,6 @@ export default class Album extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-      albums: []
-    };
     this.request_albums = this.request_albums.bind(this);
     this.store_albums = this.store_albums.bind(this);
     this.restore_albums = this.restore_albums.bind(this);
@@ -27,7 +24,7 @@ export default class Album extends React.Component {
     var component = this;
     // Execute the API request.
     request.execute(function (response) {
-      component.setState({ albums: component.state.albums.concat(response.albums) });
+      component.props.parent.setState({ albums: component.props.parent.state.albums.concat(response.albums) });
       if (response.nextPageToken != undefined) {
         component.request_albums(response.nextPageToken);
       }
@@ -45,9 +42,9 @@ export default class Album extends React.Component {
     // reset photos array when starting to load photos
     // usefull if an exception occured préviously
     if (nextPageToken == undefined) {
-      let albums = this.state.albums;
+      let albums = this.props.parent.state.albums;
       album.photos = [];
-      this.setState({ albums : albums });
+      this.props.parent.setState({ albums : albums });
     }
     let params = { albumId: album.id };
     if (nextPageToken != undefined) {
@@ -60,7 +57,7 @@ export default class Album extends React.Component {
     });
     request.execute(function (response) {
       
-      let albums = component.state.albums;
+      let albums = component.props.parent.state.albums;
       if (Array.isArray(response.mediaItems)) {
           let photos = response.mediaItems.map(photo => { return { id: photo.id }; });
           if (album.photos) {        
@@ -69,7 +66,7 @@ export default class Album extends React.Component {
             album.photos = photos;
           }
         }
-      component.setState({ albums: albums });
+      component.props.parent.setState({ albums: albums });
       if (response.nextPageToken) {
         component.request_albumPhotos(album, response.nextPageToken);
       }
@@ -78,7 +75,7 @@ export default class Album extends React.Component {
 
   request_allAlbumPhotos() {
     var component = this;
-    const albums = this.state.albums;
+    const albums = this.props.parent.state.albums;
     albums.forEach(album => {
       this.request_albumPhotos(album);
     });
@@ -86,12 +83,12 @@ export default class Album extends React.Component {
   }
 
   store_albums() {
-    localStorage.setItem('albums', JSON.stringify(this.state.albums));
+    localStorage.setItem('albums', JSON.stringify(this.props.parent.state.albums));
   }
 
   restore_albums() {
     var albums = JSON.parse(localStorage.getItem('albums'));
-    this.setState({ albums: albums });
+    this.props.parent.setState({ albums: albums });
   }
 
   render() {
@@ -100,7 +97,7 @@ export default class Album extends React.Component {
       <button onClick={this.request_allAlbumPhotos}>request album phptos</button>
       <button onClick={this.store_albums}>store albums</button>
       <button onClick={this.restore_albums}>restore albums</button>
-      <div>{this.state.albums.map((item) => <span>{item.title} ({item.photos != undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
+      <div>{this.props.parent.state.albums.map((item) => <span>{item.title} ({item.photos != undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
     </div>;
   }
 }
