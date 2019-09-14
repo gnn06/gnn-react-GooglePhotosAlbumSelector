@@ -1,6 +1,6 @@
 div.grille {
   display: grid;
-  grid-template-columns: 128px 128px 128px 128px;
+  grid-template-columns: 128px 128px 128px 128px 128px 128px;
   grid-gap: 2px;
 }
 
@@ -9,7 +9,6 @@ div.image-with-flag {
 }
 
 img {
-  opacity: 0.5;
   width: 128px;
   height: 128px;
 }
@@ -18,8 +17,12 @@ div.flag {
   position: absolute;
   bottom:0px;
   left:0px;
+}
+
+div.flag div {
   background: red;
   padding: 2px;
   margin: 2px;
   font-family: monospace;
+  width: fit-content;
 }

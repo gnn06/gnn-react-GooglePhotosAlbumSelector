@@ -90,7 +90,7 @@ class App extends React.Component {
         <button onClick={this.signout}>sign out</button>
         <User />
         <Album parent={this} />
-        <ImageList />
+        <ImageList albums={this.state.albums}/>
       </div>
     );
   }

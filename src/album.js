@@ -59,7 +59,7 @@ export default class Album extends React.Component {
       
       let albums = component.props.parent.state.albums;
       if (Array.isArray(response.mediaItems)) {
-          let photos = response.mediaItems.map(photo => { return { id: photo.id }; });
+          let photos = response.mediaItems.map(photo => { return photo.id ; });
           if (album.photos) {        
             album.photos = album.photos.concat(photos);
           } else {

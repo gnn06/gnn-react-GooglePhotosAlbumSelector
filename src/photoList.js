@@ -1,23 +1,6 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
 
-function findAlbums(photoId) {
-  //return albums.filter(item => photoInPhotos(photoId, item.photos));
-}
-
-function photoInPhotos(photoId, photos) {
-  if (photos != null) {
-    return photos.some(item => item.id == photoId);
-  } else
-    return false;
-}
-
-function flagPhotoWithAlbum(photoList, albums) {
-  photoList.forEach(element => {
-    element.albums = [ 'goi' ];
-  });
-}
-
 export default class ImageList extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +13,9 @@ export default class ImageList extends React.Component {
   request_photos() {
     var component = this;
     const nextPageToken = this.state.nextPageToken;
-    let params = {};
+    let params = {
+      pageSize: 100
+    };
     if (nextPageToken != undefined) {
       params.pageToken = nextPageToken;
     }
@@ -42,7 +27,6 @@ export default class ImageList extends React.Component {
     // Execute the API request.
     request.execute(function (response) {
       const statePhotoList = component.state.photos;
-      flagPhotoWithAlbum(statePhotoList, []);
       const newPhotoList = statePhotoList.concat(response.mediaItems);
       component.setState({
         photos: newPhotoList,
@@ -66,7 +50,7 @@ export default class ImageList extends React.Component {
 
   render() {
     return <div>
-      <div class="grille">{this.state.photos.map((item) => <Image item={item} />)}</div>
+      <div class="grille">{this.state.photos.map((item) => <Image baseUrl={item.baseUrl} albums={getAlbumsPhoto(item.id, this.props.albums)}/>)}</div>
       <button onClick={this.request_photos}>request photo</button>
       
     </div>;
@@ -74,6 +58,16 @@ export default class ImageList extends React.Component {
 }
 
 function Image(props) {
-  return <div class="image-with-flag"><img src={props.item.baseUrl} /></div>;
+  return <div class="image-with-flag">
+    <img src={props.baseUrl} />
+    <div class="flag">
+      { props.albums.map(item => <div class="flag">{item}</div>)}    
+    </div>
+  </div>;
 }
 
+
+function getAlbumsPhoto(id, albums) {
+  const albumsFounded = albums.filter(al => al.photos.indexOf(id) > -1);
+  return albumsFounded.map(item => item.title);
+}
