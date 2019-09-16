@@ -50,7 +50,7 @@ export default class ImageList extends React.Component {
 
   render() {
     return <div>
-      <div class="grille">{this.state.photos.map((item) => <Image baseUrl={item.baseUrl} albums={getAlbumsPhoto(item.id, this.props.albums)}/>)}</div>
+      <div class="grille">{this.state.photos.map((item) => <Image baseUrl={item.baseUrl} productUrl={item.productUrl} albums={getAlbumsPhoto(item.id, this.props.albums)}/>)}</div>
       <button onClick={this.request_photos}>request photo</button>
       
     </div>;
@@ -59,7 +59,7 @@ export default class ImageList extends React.Component {
 
 function Image(props) {
   return <div class="image-with-flag">
-    <img src={props.baseUrl} />
+    <a href={props.productUrl}><img src={props.baseUrl} /></a>
     <div class="flag">
       { props.albums.map(item => <div class="flag">{item}</div>)}    
     </div>
