@@ -5,9 +5,12 @@ export default class ImageList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      photos: []
+      photos: [],
+      selected: new Set()
     };
     this.request_photos = this.request_photos.bind(this);
+    this.addAlbum       = this.addAlbum.bind(this);
+    this.removeAlbum    = this.removeAlbum.bind(this);
   }
 
   request_photos() {
@@ -35,6 +38,18 @@ export default class ImageList extends React.Component {
     });
   }
 
+  addAlbum(photoId) {
+    this.state.selected.add(photoId);
+    this.setState({ selected: this.state.selected });
+    ;
+  }
+
+  removeAlbum(photoId) {
+    this.state.selected.delete(photoId);
+    this.setState({ selected: this.state.selected });
+    ;
+  }
+
   /*sendAuthorizedApiRequest(requestDetails) {
     currentApiRequest = requestDetails;
     if (isAuthorized) {
@@ -50,22 +65,50 @@ export default class ImageList extends React.Component {
 
   render() {
     return <div>
-      <div class="grille">{this.state.photos.map((item) => <Image baseUrl={item.baseUrl} productUrl={item.productUrl} albums={getAlbumsPhoto(item.id, this.props.albums)}/>)}</div>
+      {this.state.selected.size} <button onClick={this.addAlbum}>add to album</button>
+      <div class="grille">{this.state.photos.map((item) => 
+        <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
+          id={item.id}
+          albums={getAlbumsPhoto(item.id, this.props.albums)}
+          addAlbum={this.addAlbum} removeAlbum={this.removeAlbum}/>)}
+      </div>
       <button onClick={this.request_photos}>request photo</button>
-      
     </div>;
   }
 }
 
-function Image(props) {
-  return <div class="image-with-flag">
-    <a href={props.productUrl}><img src={props.baseUrl} /></a>
-    <div class="flag">
-      { props.albums.map(item => <div class="flag">{item}</div>)}    
-    </div>
-  </div>;
-}
+class Image extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSelected: false
+    };
+
+    this.handleSelect = this.handleSelect.bind(this);
+  }
+
+  handleSelect(event) {
+    const target = event.target;
+    const selected = target.checked ;
+    this.setState({ isSelected: selected });
+    if (selected) {
+      this.props.addAlbum(this.props.id);
+    } else {
+      this.props.removeAlbum(this.props.id);
+    }   
+  }
+
+  render() {
+    return <div class="image-with-flag">
+                <a href={this.props.productUrl}><img src={this.props.baseUrl} /></a>
+                <div class="flag">
+                  { this.props.albums.map(item => <div class="flag">{item}</div>)}    
+                </div>
+                <input type="checkbox" checked={this.state.isSelected} onChange={this.handleSelect}/>
+              </div>; 
+  }
+}
 
 function getAlbumsPhoto(id, albums) {
   const albumsFounded = albums.filter(al => al.photos.indexOf(id) > -1);

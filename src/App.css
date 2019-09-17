@@ -43,3 +43,8 @@ div.flag div:nth-child(4) {
   background-color: #f5f500;
 }
 
+div.image-with-flag input {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
