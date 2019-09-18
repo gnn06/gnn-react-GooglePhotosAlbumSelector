@@ -97,7 +97,7 @@ export default class Album extends React.Component {
       <button onClick={this.request_allAlbumPhotos}>request album phptos</button>
       <button onClick={this.store_albums}>store albums</button>
       <button onClick={this.restore_albums}>restore albums</button>
-      <div>{this.props.parent.state.albums.map((item) => <span>{item.title} ({item.photos != undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
+      <div>{this.props.parent.state.albums.map((item) => <span key={item.id}>{item.title} ({item.photos != undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
     </div>;
   }
 }

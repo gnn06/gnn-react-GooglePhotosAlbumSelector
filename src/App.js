@@ -26,7 +26,7 @@ class App extends React.Component {
 
   start() {
     console.log('start');
-    var component = this;
+    let component = this;
     // 2. Initialize the JavaScript client library.
     gapi.client.init({
       'apiKey': 'AIzaSyDGs41Ht7xoF-IRKXwMBzhrKLEtCAj3kyA',

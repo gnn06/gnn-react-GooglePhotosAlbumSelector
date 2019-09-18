@@ -11,7 +11,7 @@ export default class Album extends React.Component {
   }
 
   handleChoose(event) {
-    const id = event.target.getAttribute('albumId');
+    const id = event.target.getAttribute('albumid');
     this.props.handleChoose(id);
     this.props.close();
   }
@@ -21,7 +21,7 @@ export default class Album extends React.Component {
       <h2 ref={subtitle => this.subtitle = subtitle}>Choose an album</h2>
       <button onClick={this.props.close}>close</button>
         {this.props.albums.map(album => 
-          <div albumId={album.id} onClick={this.handleChoose}>{album.title}</div>)}
+          <div albumid={album.id} key={album.id} onClick={this.handleChoose}>{album.title}</div>)}
       
     </Modal>
   }

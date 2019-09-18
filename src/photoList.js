@@ -92,9 +92,9 @@ export default class ImageList extends React.Component {
         albums={this.props.albums}
         handleChoose={this.handleChooseAlbum}/>
 
-      <div class="grille">{this.state.photos.map((item) => 
+      <div className="grille">{this.state.photos.map((item) => 
         <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
-          id={item.id}
+          id={item.id} key={item.id}
           albums={getAlbumsPhoto(item.id, this.props.albums)}
           addAlbum={this.addAlbum} removeAlbum={this.removeAlbum}/>)}
       </div>
@@ -126,10 +126,10 @@ class Image extends React.Component {
   }
 
   render() {
-    return <div class="image-with-flag">
+    return <div className="image-with-flag">
                 <a href={this.props.productUrl}><img src={this.props.baseUrl} /></a>
-                <div class="flag">
-                  { this.props.albums.map(item => <div class="flag">{item}</div>)}    
+                <div className="flag" >
+                  { this.props.albums.map((item, index) => <div className="flag" key={index}>{item}</div>)}    
                 </div>
                 <input type="checkbox" checked={this.state.isSelected} onChange={this.handleSelect}/>
               </div>; 
