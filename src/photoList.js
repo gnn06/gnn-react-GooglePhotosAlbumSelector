@@ -1,7 +1,6 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
 import ModalAlbum from './ModalAlbum.js';
-import { tsImportEqualsDeclaration } from '@babel/types';
 
 export default class ImageList extends React.Component {
   constructor(props) {
@@ -25,7 +24,7 @@ export default class ImageList extends React.Component {
     let params = {
       pageSize: 100
     };
-    if (nextPageToken != undefined) {
+    if (nextPageToken !== undefined) {
       params.pageToken = nextPageToken;
     }
     var request = gapi.client.request({
@@ -84,7 +83,7 @@ export default class ImageList extends React.Component {
   render() {
     return <div>
       {this.state.selected.size}
-      <button onClick={this.openModal} disabled={this.state.selected.size == 0}>add to album</button>
+      <button onClick={this.openModal} disabled={this.state.selected.size === 0}>add to album</button>
 
       <ModalAlbum 
         isOpen={this.state.modalIsOpen}
@@ -127,7 +126,7 @@ class Image extends React.Component {
 
   render() {
     return <div className="image-with-flag">
-                <a href={this.props.productUrl}><img src={this.props.baseUrl} /></a>
+                <a href={this.props.productUrl}><img src={this.props.baseUrl} alt=""/></a>
                 <div className="flag" >
                   { this.props.albums.map((item, index) => <div className="flag" key={index}>{item}</div>)}    
                 </div>

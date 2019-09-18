@@ -1,13 +1,10 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Album from './album.js';
 import ImageList from './photoList.js';
 
 var GoogleAuth; // Google Auth object.
-var isAuthorized;
-var currentApiRequest;
 
 class App extends React.Component {
 
@@ -73,10 +70,7 @@ class App extends React.Component {
   updateSigninStatus(isSignedIn) {
     console.log('updateListener');
     if (isSignedIn) {
-      isAuthorized = true;
       this.setSigninStatus();
-    } else {
-      isAuthorized = false;
     }
   }
 

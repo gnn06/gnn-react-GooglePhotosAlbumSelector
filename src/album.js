@@ -13,7 +13,7 @@ export default class Album extends React.Component {
 
   request_albums(nextPageToken) {
     var params = {};
-    if (nextPageToken != undefined && typeof nextPageToken == "string") {
+    if (nextPageToken !== undefined && typeof nextPageToken == "string") {
       params.pageToken = nextPageToken;
     }
     var request = gapi.client.request({
@@ -25,7 +25,7 @@ export default class Album extends React.Component {
     // Execute the API request.
     request.execute(function (response) {
       component.props.parent.setState({ albums: component.props.parent.state.albums.concat(response.albums) });
-      if (response.nextPageToken != undefined) {
+      if (response.nextPageToken !== undefined) {
         component.request_albums(response.nextPageToken);
       }
     });
@@ -34,20 +34,20 @@ export default class Album extends React.Component {
   request_albumPhotos(album, nextPageToken) {
     let component = this;
     // if album is already loaded, then abort
-    if (album.photos != undefined && 
-        album.photos.length == album.mediaItemsCount)
+    if (album.photos !== undefined && 
+        album.photos.length === album.mediaItemsCount)
     {
       return;
     }
     // reset photos array when starting to load photos
     // usefull if an exception occured préviously
-    if (nextPageToken == undefined) {
+    if (nextPageToken === undefined) {
       let albums = this.props.parent.state.albums;
       album.photos = [];
       this.props.parent.setState({ albums : albums });
     }
     let params = { albumId: album.id };
-    if (nextPageToken != undefined) {
+    if (nextPageToken !== undefined) {
       params.pageToken = nextPageToken;
     }
     let request = gapi.client.request({
@@ -74,7 +74,6 @@ export default class Album extends React.Component {
   }
 
   request_allAlbumPhotos() {
-    var component = this;
     const albums = this.props.parent.state.albums;
     albums.forEach(album => {
       this.request_albumPhotos(album);
@@ -97,7 +96,7 @@ export default class Album extends React.Component {
       <button onClick={this.request_allAlbumPhotos}>request album phptos</button>
       <button onClick={this.store_albums}>store albums</button>
       <button onClick={this.restore_albums}>restore albums</button>
-      <div>{this.props.parent.state.albums.map((item) => <span key={item.id}>{item.title} ({item.photos != undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
+      <div>{this.props.parent.state.albums.map((item) => <span key={item.id}>{item.title} ({item.photos !== undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
     </div>;
   }
 }
