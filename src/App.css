@@ -48,3 +48,7 @@ div.image-with-flag input {
   right: 0px;
   top: 0px;
 }
+
+div.ReactModalPortal  div:hover {
+  background-color: #b1b1b1;
+}

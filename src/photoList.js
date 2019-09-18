@@ -1,16 +1,22 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
+import ModalAlbum from './ModalAlbum.js';
+import { tsImportEqualsDeclaration } from '@babel/types';
 
 export default class ImageList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       photos: [],
-      selected: new Set()
+      selected: new Set(),
+      modalIsOpen: false
     };
     this.request_photos = this.request_photos.bind(this);
     this.addAlbum       = this.addAlbum.bind(this);
     this.removeAlbum    = this.removeAlbum.bind(this);
+    this.openModal      = this.openModal.bind(this);
+    this.closeModal     = this.closeModal.bind(this);
+    this.handleChooseAlbum = this.handleChooseAlbum.bind(this);
   }
 
   request_photos() {
@@ -50,6 +56,18 @@ export default class ImageList extends React.Component {
     ;
   }
 
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+
+  handleChooseAlbum(albumId) {
+    console.log("album choosen  : " + albumId);
+  }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+
   /*sendAuthorizedApiRequest(requestDetails) {
     currentApiRequest = requestDetails;
     if (isAuthorized) {
@@ -65,7 +83,15 @@ export default class ImageList extends React.Component {
 
   render() {
     return <div>
-      {this.state.selected.size} <button onClick={this.addAlbum}>add to album</button>
+      {this.state.selected.size}
+      <button onClick={this.openModal} disabled={this.state.selected.size == 0}>add to album</button>
+
+      <ModalAlbum 
+        isOpen={this.state.modalIsOpen}
+        close={this.closeModal}
+        albums={this.props.albums}
+        handleChoose={this.handleChooseAlbum}/>
+
       <div class="grille">{this.state.photos.map((item) => 
         <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
           id={item.id}
