@@ -9,10 +9,6 @@ var GoogleAuth; // Google Auth object.
 var isAuthorized;
 var currentApiRequest;
 
-function User() {
-  return <span>user</span>;
-}
-
 class App extends React.Component {
 
   constructor(props) {
@@ -21,6 +17,8 @@ class App extends React.Component {
       albums: []
     };
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
+    this.start = this.start.bind(this);
+    this.signout = this.signout.bind(this);
     gapi.load('client', this.start);
   }
 
@@ -38,7 +36,7 @@ class App extends React.Component {
     }).then(function () {
       // 3. Initialize and make the API request.
       GoogleAuth = gapi.auth2.getAuthInstance();
-      GoogleAuth.isSignedIn.listen(this.updateSigninStatus);
+      GoogleAuth.isSignedIn.listen(component.updateSigninStatus);
       component.setSigninStatus();
     }, function (reason) {
       console.log('Error: ' + reason.result.error.message);
@@ -54,16 +52,17 @@ class App extends React.Component {
   signout() {
     console.log('sign out');
     GoogleAuth.signOut();
+    this.setState({email:""});
   }
 
   setSigninStatus() {
     var user = GoogleAuth.currentUser.get();
-    console.log(user);
     var isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/photoslibrary.readonly');
     if (isAuthorized) {
       console.log('authorized');
       const profile = user.getBasicProfile();
       const email = profile.getEmail();
+      this.setState({email: email});
       //$("#auth-status").html(email + " authorized");
     } else {
       console.log('unauthorized');
@@ -75,9 +74,7 @@ class App extends React.Component {
     console.log('updateListener');
     if (isSignedIn) {
       isAuthorized = true;
-      if (currentApiRequest) {
-        sendAuthorizedApiRequest(currentApiRequest);
-      }
+      this.setSigninStatus();
     } else {
       isAuthorized = false;
     }
@@ -88,7 +85,7 @@ class App extends React.Component {
       <div className="App">
         <button onClick={this.signin}>sign in</button>
         <button onClick={this.signout}>sign out</button>
-        <User />
+        { this.state.email }
         <Album parent={this} />
         <ImageList albums={this.state.albums}/>
       </div>
