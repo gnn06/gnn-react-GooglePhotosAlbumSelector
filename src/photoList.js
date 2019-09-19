@@ -2,10 +2,9 @@
 import React from 'react';
 import ModalAlbum from './ModalAlbum.js';
 import Image from './Image.js';
+import GooglePhotos from './google.js';
 
-
-
-
+const service = new GooglePhotos();
 
 export default class ImageList extends React.Component {
   constructor(props) {
@@ -26,25 +25,17 @@ export default class ImageList extends React.Component {
   request_photos() {
     var component = this;
     const nextPageToken = this.state.nextPageToken;
-    let params = {
-      pageSize: 100
-    };
-    if (nextPageToken !== undefined) {
-      params.pageToken = nextPageToken;
-    }
-    var request = gapi.client.request({
-      'method': 'GET',
-      'path': 'https://photoslibrary.googleapis.com/v1/mediaItems',
-      params: params
-    });
-    // Execute the API request.
-    request.execute(function (response) {
+    
+    service.getPhotos(nextPageToken)
+    .then(function(response) {
       const statePhotoList = component.state.photos;
-      const newPhotoList = statePhotoList.concat(response.mediaItems);
+      const newPhotoList = statePhotoList.concat(response.result.mediaItems);
       component.setState({
         photos: newPhotoList,
-        nextPageToken : response.nextPageToken
+        nextPageToken : response.result.nextPageToken
       });
+    }, function(error) {
+      console.error(error);
     });
   }
 
@@ -66,6 +57,8 @@ export default class ImageList extends React.Component {
 
   handleChooseAlbum(albumId) {
     console.log("album choosen  : " + albumId);
+    const selectedArray = Array.from(this.state.selected);
+    service.addPhotoToAlbum(selectedArray, albumId);
   }
 
   closeModal() {

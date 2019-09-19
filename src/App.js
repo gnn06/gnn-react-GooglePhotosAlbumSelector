@@ -54,7 +54,7 @@ class App extends React.Component {
 
   setSigninStatus() {
     var user = GoogleAuth.currentUser.get();
-    var isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/photoslibrary.readonly');
+    var isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/photoslibrary');
     if (isAuthorized) {
       console.log('authorized');
       const profile = user.getBasicProfile();
