@@ -77,12 +77,12 @@ class App extends React.Component {
   render () {
     return (
       <div className="App">
-        <div className="header-panel">
+        { this.state.email }
+        <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
+          <Album parent={this} />
         </div>
-        { this.state.email }
-        <Album parent={this} />
         <ImageList albums={this.state.albums}/>
       </div>
     );
