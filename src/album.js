@@ -91,7 +91,7 @@ export default class Album extends React.Component {
   }
 
   render() {
-    return <div>
+    return <div class="album-panel">
       <button onClick={this.request_albums}>request albums</button>
       <button onClick={this.request_allAlbumPhotos}>request album phptos</button>
       <button onClick={this.store_albums}>store albums</button>

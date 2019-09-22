@@ -1,3 +1,24 @@
+div.header-panel {
+  background-color: #dfdede;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
+
+div.album-panel {
+  width: 250px;
+  position: fixed;
+  top: 30px;
+  background-color: #cbcffb;
+  margin-top: 0px;
+}
+
+div.photo-panel {
+  margin-left: 250px;
+  margin-top: 30px;
+  background-color: #d2b3ca;
+}
+
 div.grille {
   display: grid;
   grid-template-columns: 128px 128px 128px 128px 128px 128px;

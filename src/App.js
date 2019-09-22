@@ -77,8 +77,10 @@ class App extends React.Component {
   render () {
     return (
       <div className="App">
-        <button onClick={this.signin}>sign in</button>
-        <button onClick={this.signout}>sign out</button>
+        <div className="header-panel">
+          <button onClick={this.signin}>sign in</button>
+          <button onClick={this.signout}>sign out</button>
+        </div>
         { this.state.email }
         <Album parent={this} />
         <ImageList albums={this.state.albums}/>

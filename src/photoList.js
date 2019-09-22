@@ -98,7 +98,7 @@ export default class ImageList extends React.Component {
   
 
   render() {
-    return <div>
+    return <div class="photo-panel">
       {this.state.selected.size}
       <button onClick={this.openModal} disabled={this.state.selected.size === 0}>add to album</button>
       <button onClick={this.hideAlbum}>hide album ({this.state.hideAlbum})</button>
