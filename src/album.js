@@ -1,5 +1,8 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
+import GooglePhotos from './google.js';
+
+const service = new GooglePhotos();
 
 export default class Album extends React.Component {
 
@@ -15,23 +18,10 @@ export default class Album extends React.Component {
     this.hideAlbum = this.hideAlbum.bind(this);
   }
 
-  request_albums(nextPageToken) {
-    var params = {};
-    if (nextPageToken !== undefined && typeof nextPageToken == "string") {
-      params.pageToken = nextPageToken;
-    }
-    var request = gapi.client.request({
-      'method': 'GET',
-      'path': 'https://photoslibrary.googleapis.com/v1/albums',
-      params: params
-    });
+  request_albums() {
     var component = this;
-    // Execute the API request.
-    request.execute(function (response) {
-      component.props.parent.setState({ albums: component.props.parent.state.albums.concat(response.albums) });
-      if (response.nextPageToken !== undefined) {
-        component.request_albums(response.nextPageToken);
-      }
+    service.getAlbums(null, albums => {
+      component.props.parent.setState({ albums: component.props.parent.state.albums.concat(albums) });
     });
   }
 

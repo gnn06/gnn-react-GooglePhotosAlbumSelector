@@ -34,4 +34,24 @@ export default class GooglePhotos {
     });
     return request;
   }
+
+  getAlbums(nextPageToken, handleGetAlbums) {
+    let that = this;
+    var params = {};
+    if (nextPageToken !== undefined && typeof nextPageToken == "string") {
+      params.pageToken = nextPageToken;
+    }
+    gapi.client.request({
+      'method': 'GET',
+      'path': 'https://photoslibrary.googleapis.com/v1/albums',
+      params: params
+    }).then(function(response) {
+      handleGetAlbums(response.result.albums);
+      if (response.result.nextPageToken !== undefined) {
+        that.getAlbums(response.result.nextPageToken, handleGetAlbums);
+      }
+    }, function (error) {
+      console.error(error);
+    });
+  }
 };
