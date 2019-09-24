@@ -5,10 +5,14 @@ export default class Album extends React.Component {
 
   constructor() {
     super();
+    this.state = {
+      albumToHide: []
+    }
     this.request_albums = this.request_albums.bind(this);
     this.store_albums = this.store_albums.bind(this);
     this.restore_albums = this.restore_albums.bind(this);
     this.request_allAlbumPhotos = this.request_allAlbumPhotos.bind(this);
+    this.hideAlbum = this.hideAlbum.bind(this);
   }
 
   request_albums(nextPageToken) {
@@ -90,12 +94,24 @@ export default class Album extends React.Component {
     this.props.parent.setState({ albums: albums });
   }
 
+  hideAlbum() {
+    var value = this.state.albumToHide;
+    if (value.length > 0) {
+      value = [];
+    } else {
+      value = ["ADoMfeS3RTKABAvAAeyCoQGYc4pjVmp-eTCYa7eSPEyCsIRFBhx8SCFH-xO1LWMJMl_96Dh6R52q"];
+    }
+    this.setState({albumToHide: value});
+    this.props.hideAlbumHandle(value);
+  }
+
   render() {
     return <div>
       <button onClick={this.request_albums}>request albums</button>
       <button onClick={this.request_allAlbumPhotos}>request album phptos</button>
       <button onClick={this.store_albums}>store albums</button>
       <button onClick={this.restore_albums}>restore albums</button>
+      <button onClick={this.hideAlbum}>hide album</button>
       <div>{this.props.parent.state.albums.map((item) => <span key={item.id}>{item.title} ({item.photos !== undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
     </div>;
   }

@@ -11,12 +11,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      albums: []
+      albums: [],
+      albumToHide: []
     };
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     this.start = this.start.bind(this);
     this.signout = this.signout.bind(this);
+    this.hideAlbum = this.hideAlbum.bind(this);
     gapi.load('client', this.start);
+  }
+
+  hideAlbum(albums) {
+    this.setState({albumToHide: albums});
   }
 
   start() {
@@ -81,9 +87,10 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
-          <Album parent={this} />
+          <Album parent={this} hideAlbumHandle={this.hideAlbum}/>
         </div>
-        <ImageList albums={this.state.albums}/>
+        <ImageList albums={this.state.albums}
+          hideAlbum={this.state.albumToHide}/>
       </div>
     );
   }
