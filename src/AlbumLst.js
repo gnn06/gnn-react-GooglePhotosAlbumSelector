@@ -16,7 +16,7 @@ export default class AlbumLst extends React.Component {
     this.store_albums = this.store_albums.bind(this);
     this.restore_albums = this.restore_albums.bind(this);
     this.request_allAlbumPhotos = this.request_allAlbumPhotos.bind(this);
-    this.hideAlbum = this.hideAlbum.bind(this);
+    this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
   }
 
   request_albums() {
@@ -85,15 +85,8 @@ export default class AlbumLst extends React.Component {
     this.props.parent.setState({ albums: albums });
   }
 
-  hideAlbum() {
-    var value = this.state.albumToHide;
-    if (value.length > 0) {
-      value = [];
-    } else {
-      value = ["ADoMfeS3RTKABAvAAeyCoQGYc4pjVmp-eTCYa7eSPEyCsIRFBhx8SCFH-xO1LWMJMl_96Dh6R52q"];
-    }
-    this.setState({albumToHide: value});
-    this.props.hideAlbumHandle(value);
+  hideAlbumHandle(albumId, selected) {
+    this.props.hideAlbumHandle(albumId, selected);
   }
 
   render() {
@@ -104,7 +97,7 @@ export default class AlbumLst extends React.Component {
       <button onClick={this.restore_albums}>restore albums</button>
       <button onClick={this.hideAlbum}>hide album</button>
       <div>{this.props.parent.state.albums.map((item) => 
-        <Album item={item}/>
+        <Album item={item} hideAlbumHandle={this.hideAlbumHandle}/>
         )}
       </div>
     </div>;

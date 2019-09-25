@@ -17,12 +17,8 @@ class App extends React.Component {
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     this.start = this.start.bind(this);
     this.signout = this.signout.bind(this);
-    this.hideAlbum = this.hideAlbum.bind(this);
+    this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
     gapi.load('client', this.start);
-  }
-
-  hideAlbum(albums) {
-    this.setState({albumToHide: albums});
   }
 
   start() {
@@ -80,6 +76,16 @@ class App extends React.Component {
     }
   }
 
+  hideAlbumHandle(albumId, selected) {
+    const stateAlbumToHide = this.state.albumToHide;
+    if (selected) {
+      stateAlbumToHide.push(albumId);
+    } else {
+      stateAlbumToHide.pop(albumId);
+    }
+    this.setState({albumToHide: stateAlbumToHide});
+  }
+
   render () {
     return (
       <div className="App">
@@ -87,7 +93,7 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
-          <AlbumLst parent={this} hideAlbumHandle={this.hideAlbum}/>
+          <AlbumLst parent={this} hideAlbumHandle={this.hideAlbumHandle}/>
         </div>
         <ImageList albums={this.state.albums}
           hideAlbum={this.state.albumToHide}/>
