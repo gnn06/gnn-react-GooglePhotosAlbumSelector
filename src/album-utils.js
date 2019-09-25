@@ -8,7 +8,7 @@ export function getAlbumsPhoto(id, albums) {
     return albumsFounded.map(item => { return { id: item.id, title: item.title } });
 }
 
-function hasAllAlbumToHide(photoAlbum, albumsToHide) {
+export function hasAllAlbumToHide(photoAlbum, albumsToHide) {
     if (Array.isArray(photoAlbum) && photoAlbum.length > 0) {
         let hide = photoAlbum.every(album => albumsToHide.indexOf(album.id) >= 0);
         return hide;
