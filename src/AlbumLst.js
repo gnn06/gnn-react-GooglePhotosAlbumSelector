@@ -1,10 +1,11 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
 import GooglePhotos from './google.js';
+import Album from './Album.js';
 
 const service = new GooglePhotos();
 
-export default class Album extends React.Component {
+export default class AlbumLst extends React.Component {
 
   constructor() {
     super();
@@ -102,7 +103,10 @@ export default class Album extends React.Component {
       <button onClick={this.store_albums}>store albums</button>
       <button onClick={this.restore_albums}>restore albums</button>
       <button onClick={this.hideAlbum}>hide album</button>
-      <div>{this.props.parent.state.albums.map((item) => <span key={item.id}>{item.title} ({item.photos !== undefined ? item.photos.length : 0} / {item.mediaItemsCount})</span>)}</div>
+      <div>{this.props.parent.state.albums.map((item) => 
+        <Album item={item}/>
+        )}
+      </div>
     </div>;
   }
 }

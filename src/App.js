@@ -1,7 +1,7 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
 import './App.css';
-import Album from './album.js';
+import AlbumLst from './AlbumLst.js';
 import ImageList from './photoList.js';
 
 var GoogleAuth; // Google Auth object.
@@ -87,7 +87,7 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
-          <Album parent={this} hideAlbumHandle={this.hideAlbum}/>
+          <AlbumLst parent={this} hideAlbumHandle={this.hideAlbum}/>
         </div>
         <ImageList albums={this.state.albums}
           hideAlbum={this.state.albumToHide}/>
