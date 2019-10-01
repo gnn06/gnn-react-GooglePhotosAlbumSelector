@@ -11,7 +11,7 @@ export default class Album extends React.Component {
         const target = event.target;
         const selected = target.checked;
         const albumId = this.props.item.id;
-        this.props.hideAlbumHandle(albumId, selected);
+        this.props.selectAlbumHandle(albumId, selected);
     }
 
     render() {

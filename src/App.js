@@ -12,12 +12,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       albums: [],
-      albumToHide: []
+      hideAlbums: [],
+      showOnlyAlbums: [],
     };
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     this.start = this.start.bind(this);
     this.signout = this.signout.bind(this);
     this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
+    this.showOnlyAlbumHandle = this.showOnlyAlbumHandle.bind(this);
     gapi.load('client', this.start);
   }
 
@@ -76,14 +78,12 @@ class App extends React.Component {
     }
   }
 
-  hideAlbumHandle(albumId, selected) {
-    const stateAlbumToHide = this.state.albumToHide;
-    if (selected) {
-      stateAlbumToHide.push(albumId);
-    } else {
-      stateAlbumToHide.pop(albumId);
-    }
-    this.setState({albumToHide: stateAlbumToHide});
+  hideAlbumHandle(albums) {
+    this.setState({hideAlbums: albums})
+  }
+
+  showOnlyAlbumHandle(albums) {
+    this.setState({showOnlyAlbums: albums})
   }
 
   render () {
@@ -93,10 +93,12 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
-          <AlbumLst parent={this} hideAlbumHandle={this.hideAlbumHandle}/>
+          <AlbumLst ref="albumLst" parent={this} 
+            hideAlbumHandle={this.hideAlbumHandle}
+            showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
         </div>
         <ImageList albums={this.state.albums}
-          hideAlbum={this.state.albumToHide}/>
+          hideAlbum={this.state.selectedAlbum}/>
       </div>
     );
   }

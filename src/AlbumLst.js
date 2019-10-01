@@ -10,13 +10,15 @@ export default class AlbumLst extends React.Component {
   constructor() {
     super();
     this.state = {
-      albumToHide: []
+      selectedAlbum: []
     }
     this.request_albums = this.request_albums.bind(this);
     this.store_albums = this.store_albums.bind(this);
     this.restore_albums = this.restore_albums.bind(this);
     this.request_allAlbumPhotos = this.request_allAlbumPhotos.bind(this);
-    this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
+    this.selectAlbumHandle = this.selectAlbumHandle.bind(this);
+    this.hideAlbum = this.hideAlbum.bind(this);
+    this.showOnlyAlbum = this.showOnlyAlbum.bind(this);
   }
 
   request_albums() {
@@ -85,8 +87,27 @@ export default class AlbumLst extends React.Component {
     this.props.parent.setState({ albums: albums });
   }
 
-  hideAlbumHandle(albumId, selected) {
-    this.props.hideAlbumHandle(albumId, selected);
+  selectAlbumHandle(albumId, selected) {
+    const stateSelectedAlbum = this.state.selectedAlbum;
+    if (selected) {
+      stateSelectedAlbum.push(albumId);
+    } else {
+      stateSelectedAlbum.pop(albumId);
+    }
+    this.setState({selectedAlbum: stateSelectedAlbum});
+  }
+
+  getSelectedAlbum() {
+    const stateSelectedAlbum = this.state.selectedAlbum;
+    return stateSelectedAlbum;
+  }
+
+  hideAlbum() {
+    this.props.hideAlbumHandle(this.state.selectedAlbum);
+  }
+
+  showOnlyAlbum() {
+    this.props.showOnlyAlbumHandle(this.state.selectedAlbum);
   }
 
   render() {
@@ -96,8 +117,9 @@ export default class AlbumLst extends React.Component {
       <button onClick={this.store_albums}>store albums</button>
       <button onClick={this.restore_albums}>restore albums</button>
       <button onClick={this.hideAlbum}>hide album</button>
+      <button onClick={this.showOnlyAlbum}>show only album</button>
       <div>{this.props.parent.state.albums.map((item) => 
-        <Album item={item} hideAlbumHandle={this.hideAlbumHandle}/>
+        <Album item={item} selectAlbumHandle={this.selectAlbumHandle}/>
         )}
       </div>
     </div>;
