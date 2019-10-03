@@ -15,12 +15,16 @@ class App extends React.Component {
       albums: [],
       hideAlbums: [],
       showOnlyAlbums: [],
+      dateFilter: undefined
     };
+
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     this.start = this.start.bind(this);
     this.signout = this.signout.bind(this);
     this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
     this.showOnlyAlbumHandle = this.showOnlyAlbumHandle.bind(this);
+    this.dateFilterHandle = this.dateFilterHandle.bind(this);
+
     gapi.load('client', this.start);
   }
 
@@ -87,6 +91,10 @@ class App extends React.Component {
     this.setState({showOnlyAlbums: albums})
   }
 
+  dateFilterHandle(dateFilter) {
+    this.setState({dateFilter: dateFilter})
+  }
+
   render () {
     return (
       <div className="App">
@@ -94,7 +102,7 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
-          <DateFilter/>
+          <DateFilter dateFilterHandle={this.dateFilterHandle}/>
           <AlbumLst ref="albumLst" parent={this} 
             hideAlbumHandle={this.hideAlbumHandle}
             showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
