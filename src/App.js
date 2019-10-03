@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import AlbumLst from './AlbumLst.js';
 import ImageList from './photoList.js';
+import DateFilter from './DateFilter.js';
 
 var GoogleAuth; // Google Auth object.
 
@@ -93,6 +94,7 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
+          <DateFilter/>
           <AlbumLst ref="albumLst" parent={this} 
             hideAlbumHandle={this.hideAlbumHandle}
             showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
