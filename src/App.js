@@ -108,7 +108,7 @@ class App extends React.Component {
             showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
         </div>
         <ImageList albums={this.state.albums}
-          hideAlbum={this.state.selectedAlbum}/>
+          hideAlbum={this.state.hideAlbums}/>
       </div>
     );
   }
