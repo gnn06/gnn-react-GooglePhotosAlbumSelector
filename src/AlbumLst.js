@@ -119,7 +119,7 @@ export default class AlbumLst extends React.Component {
       <button onClick={this.hideAlbum}>hide album</button>
       <button onClick={this.showOnlyAlbum}>show only album</button>
       <div>{this.props.parent.state.albums.map((item) => 
-        <Album item={item} selectAlbumHandle={this.selectAlbumHandle}/>
+        <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
         )}
       </div>
     </div>;
