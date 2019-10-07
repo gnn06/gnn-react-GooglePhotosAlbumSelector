@@ -52,3 +52,8 @@ it('filterOneAlbum, not filtered', () => {
     expect(filtered).toEqual([{id:"photo1", albums:[{id:"album1"}]}]);
 });
 
+it('filterOneAlbum, nothing to filter', () => {
+    const filtered = AlbumUtil.filterOneAlbum([{id:"photo1", albums:[{id:"album1"}]}], []);
+    expect(filtered).toEqual([{id:"photo1", albums:[{id:"album1"}]}]);
+});
+
