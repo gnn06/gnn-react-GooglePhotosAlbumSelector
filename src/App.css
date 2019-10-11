@@ -5,6 +5,10 @@ div.header-panel {
   left: 0px;
 }
 
+div.album-list {
+  height: 700px;
+  overflow: scroll;
+}
 div.album-panel {
   width: 250px;
   position: fixed;

@@ -79,7 +79,7 @@ export default class AlbumLst extends React.Component {
       <button onClick={this.restore_albums}>restore albums</button>
       <button onClick={this.hideAlbum}>hide album</button>
       <button onClick={this.showOnlyAlbum}>show only album</button>
-      <div>{this.props.parent.state.albums.map((item) => 
+      <div className="album-list">{this.props.parent.state.albums.map((item) => 
         <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
         )}
       </div>
