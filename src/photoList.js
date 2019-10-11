@@ -6,8 +6,6 @@ import GooglePhotos from './google.js';
 import * as AlbumUtil from "./album-utils.js";
 import InfiniteScroll from 'react-infinite-scroller';
 
-const service = new GooglePhotos();
-
 export default class ImageList extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +29,7 @@ export default class ImageList extends React.Component {
     var component = this;
     const nextPageToken = this.state.nextPageToken;
 
-    service.getPhotos(nextPageToken)
+    GooglePhotos.getPhotos(nextPageToken)
       .then(function(response) {
         const statePhotoList = component.state.photos;
         const newPhotoList = statePhotoList.concat(response.result.mediaItems.map(
@@ -68,7 +66,7 @@ export default class ImageList extends React.Component {
   handleChooseAlbum(albumId) {
     console.log("album choosen  : " + albumId);
     const selectedArray = Array.from(this.state.selected);
-    service.addPhotoToAlbum(selectedArray, albumId);
+    GooglePhotos.addPhotoToAlbum(selectedArray, albumId);
   }
 
   closeModal() {
