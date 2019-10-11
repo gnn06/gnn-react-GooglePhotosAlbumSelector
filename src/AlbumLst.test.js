@@ -53,7 +53,7 @@ it("renders with or without a name", () => {
         }
     };
     compo.component = compo;
-    GooglePhotos.getAlbumsDetail = function (albums, callback) {
+    GooglePhotos.getAllAlbumDetail = function (albums, callback) {
         albums[0].photos = [{ id: "photoid1" }];
         callback(albums[0]);
     };

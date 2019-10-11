@@ -29,7 +29,7 @@ export default class AlbumLst extends React.Component {
   request_allAlbumPhotos() {
     const albums = this.props.parent.state.albums;
     var component = this;
-    GooglePhotos.getAlbumsDetail(albums, (album) => {
+    GooglePhotos.getAllAlbumDetail(albums, (album) => {
       let albums = component.props.parent.state.albums;
       const index = albums.findIndex(al => al.id === album.id);
       if (index > -1) {

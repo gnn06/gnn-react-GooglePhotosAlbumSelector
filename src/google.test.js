@@ -1,7 +1,7 @@
 import Google  from './google.js';
 import expectExport from 'expect';
 
-it('getAlbumsDetail two albums already retrieved', () => {
+it('getAllAlbumDetail two albums already retrieved', () => {
     const albums = 
     [
         {
@@ -22,14 +22,14 @@ it('getAlbumsDetail two albums already retrieved', () => {
     const spyGetAlbumDetail = jest.fn();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
-    Google.getAlbumsDetail(albums, mockFn);
+    Google.getAllAlbumDetail(albums, mockFn);
 
     expect(spyGetAlbumDetail).not.toHaveBeenCalled();
 
     Google.getAlbumDetail = getAlbumDetailSaved;
 });
 
-it('getAlbumsDetail two albums not already retrieved', () => {
+it('getAllAlbumDetail two albums not already retrieved', () => {
     const albums = 
     [
         { id:"album1",
@@ -48,14 +48,14 @@ it('getAlbumsDetail two albums not already retrieved', () => {
     const spyGetAlbumDetail = jest.fn();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
-    Google.getAlbumsDetail(albums, mockFn);
+    Google.getAllAlbumDetail(albums, mockFn);
 
     expect(spyGetAlbumDetail).toHaveBeenCalledTimes(1);
 
     Google.getAlbumDetail = getAlbumDetailSaved;
 });
 
-it('getAlbumsDetail first of two albums already retrieved', () => {
+it('getAllAlbumDetail first of two albums already retrieved', () => {
     const getAlbumDetailSaved = Google.getAlbumDetail;
 
     const albums = 
@@ -77,14 +77,14 @@ it('getAlbumsDetail first of two albums already retrieved', () => {
     const spyGetAlbumDetail = jest.fn();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
-    Google.getAlbumsDetail(albums, mockFn);
+    Google.getAllAlbumDetail(albums, mockFn);
 
     expect(spyGetAlbumDetail).toHaveBeenCalledTimes(1);
 
     Google.getAlbumDetail = getAlbumDetailSaved;
 });
 
-it('getAlbumsDetail no photos property', () => {
+it('getAllAlbumDetail no photos property', () => {
     const getAlbumDetailSaved = Google.getAlbumDetail;
 
     const albums = 
@@ -99,7 +99,7 @@ it('getAlbumsDetail no photos property', () => {
     const spyGetAlbumDetail = jest.fn();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
-    Google.getAlbumsDetail(albums, mockFn);
+    Google.getAllAlbumDetail(albums, mockFn);
 
     expect(spyGetAlbumDetail).toHaveBeenCalledTimes(1);
 

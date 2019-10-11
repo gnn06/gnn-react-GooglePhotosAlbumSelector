@@ -58,7 +58,7 @@ class GooglePhotos {
     });
   }
 
-  getAlbumsDetail(albums, updateUI) {
+  getAllAlbumDetail(albums, updateUI) {
     for (let album of albums) {
       if (album.photos === undefined) {
         album.photos = [];
