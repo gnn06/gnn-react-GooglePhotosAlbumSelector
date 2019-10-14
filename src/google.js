@@ -4,29 +4,29 @@ class GooglePhotos {
   addPhotoToAlbum(photoIdLst, albumId) {
     const path = "https://photoslibrary.googleapis.com/v1/albums/{albumId}:batchAddMediaItems"
       .replace("{albumId}", albumId);
-  
+
     const body = {
       "mediaItems": photoIdLst
     };
-  
+
     gapi.client.request({
       'method': 'POST',
       'path': path,
       'body': body
     }).then(function (response) {
-      console.log(response);      
-    }, function(error) {
+      console.log(response);
+    }, function (error) {
       console.error(error);
     });
   };
-  
+
   getPhotos(nextPageToken) {
     let params = {
       pageSize: 100
     };
     if (nextPageToken !== undefined) {
       params.pageToken = nextPageToken;
-    }    
+    }
     const request = gapi.client.request({
       'method': 'GET',
       'path': 'https://photoslibrary.googleapis.com/v1/mediaItems',
@@ -45,7 +45,7 @@ class GooglePhotos {
       'method': 'GET',
       'path': 'https://photoslibrary.googleapis.com/v1/albums',
       params: params
-    }).then(function(response) {
+    }).then(function (response) {
       response.result.albums.forEach(album => {
         album.photos = [];
       });
@@ -59,29 +59,36 @@ class GooglePhotos {
   }
 
   getAllAlbumDetail(albums, updateUI) {
-    for (let album of albums) {
-      if (album.photos === undefined) {
-        album.photos = [];
-      }
-      if (album.photos.length !== album.mediaItemsCount)
-      {
-        this.getAlbumDetail(album, updateUI);
-        break;
-      }
+    const ALBUM_POOL_SIZE = 10;
+    var p = Promise.resolve();
+    var that = this;
+    const albumsToRetrieve = albums.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
+    for (let i = 0; i < albumsToRetrieve.length; i += ALBUM_POOL_SIZE) {
+      const albumSlice = albumsToRetrieve.slice(i, i + ALBUM_POOL_SIZE);
+      p = p.then(function(value) {
+        return that.getConcurrentAlbumDetail(albumSlice, updateUI);
+      });
     }
+    return p;
+  }
+
+  getConcurrentAlbumDetail(albums, updateUI) {
+    return Promise.all(albums.map(album => this.getAlbumDetail(album, updateUI)));
   }
 
   getAlbumDetail(album, updateUI, nextPageToken) {
     // to the callback
     let that = this;
     // if album is already loaded, then abort
-    if (album.photos !== undefined && 
-      album.photos.length === album.mediaItemsCount)
-    {
+    if (album.photos !== undefined &&
+      album.photos.length === album.mediaItemsCount) {
       return;
     }
-    // if start to load an album (no nextPageToken) and partially loaded then start by resetting photos to []
-    if (nextPageToken === undefined && album.photos !== undefined && album.photos.length > 0) {
+    // if start to load an album (no nextPageTokethere n) and 
+    // there is no photos property or partially loaded then start by resetting photos to []
+    if (nextPageToken === undefined
+      && (album.photos === undefined
+        || album.photos !== undefined && album.photos.length > 0)) {
       album.photos = [];
     }
     let params = { albumId: album.id };
@@ -93,21 +100,24 @@ class GooglePhotos {
       'path': 'https://photoslibrary.googleapis.com/v1/mediaItems:search',
       params: params
     });
-    request.execute(function (response) {
-      if (Array.isArray(response.mediaItems)) {
-        let photos = response.mediaItems.map(photo => { return photo.id ; });
-        if (album.photos) {        
+    return request.then(function (response) {
+      if (Array.isArray(response.result.mediaItems)) {
+        let photos = response.result.mediaItems.map(photo => { return photo.id; });
+        if (album.photos) {
           album.photos = album.photos.concat(photos);
         } else {
           album.photos = photos;
         }
       }
       updateUI(album);
-      if (response.nextPageToken) {
-        that.getAlbumDetail(album, updateUI, response.nextPageToken);
-      }
+      return response.result.nextPageToken;
+    }, function(rejected) {
+      console.error(rejected);
+    }).then(function(nextPageToken) {
+      if (nextPageToken) {
+        return that.getAlbumDetail(album, updateUI, nextPageToken);
+      } else return "";
     });
-
   }
 };
 
