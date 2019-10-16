@@ -17,7 +17,7 @@ it('getAllAlbumDetail two albums not already retrieved', () => {
     ];
     const mockFn = jest.fn();
     const getAlbumDetailSaved = Google.getAlbumDetail;
-    const spyGetAlbumDetail = jest.fn();
+    const spyGetAlbumDetail = jest.fn().mockResolvedValue();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
     return Google.getAllAlbumDetail(albums, mockFn)
@@ -76,7 +76,7 @@ it('getAllAlbumDetail first of two albums already retrieved', () => {
         }
     ];
     const mockFn = jest.fn();
-    const spyGetAlbumDetail = jest.fn();
+    const spyGetAlbumDetail = jest.fn().mockResolvedValue();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
     return Google.getAllAlbumDetail(albums, mockFn)
@@ -100,7 +100,7 @@ it('getAllAlbumDetail no photos property', () => {
         }
     ];
     const mockFn = jest.fn();
-    const spyGetAlbumDetail = jest.fn();
+    const spyGetAlbumDetail = jest.fn().mockResolvedValue();
     Google.getAlbumDetail = spyGetAlbumDetail;
     
     return Google.getAllAlbumDetail(albums, mockFn)
@@ -170,19 +170,33 @@ it('getAllAlbumDetail limit to 10 request', () => {
           title:"title11", 
           photos: [],
           mediaItemsCount: 1
+        },
+        { id:"album12",
+          title:"title12", 
+          photos: [],
+          mediaItemsCount: 1
+        },
+        { id:"album13",
+          title:"title13", 
+          photos: [],
+          mediaItemsCount: 1
+        },
+        { id:"album14",
+          title:"title14", 
+          photos: [],
+          mediaItemsCount: 1
         }
     ];
 
     const mockFn = jest.fn();
-    const spygetConcurrentAlbumDetail = jest.spyOn(Google, 'getConcurrentAlbumDetail');
-    Google.getAlbumDetail = jest.fn(function (album){
-        //console.log('mock of getAlbumDetail of ' + album.id);
-    });
+    Google.getAlbumDetail = jest.fn().mockResolvedValue(43);
     
     return Google.getAllAlbumDetail(albums, mockFn)
         .then(function(result) {
-            expect(spygetConcurrentAlbumDetail).toHaveBeenNthCalledWith(1, albums.slice(0, 10), mockFn);
-            expect(spygetConcurrentAlbumDetail).toHaveBeenNthCalledWith(2, albums.slice(10, 11), mockFn);
+            expect(Google.getAlbumDetail).toHaveBeenCalledTimes(14);
+            // for (let i = 0; i < albums.length; i++) {
+            //     expect(Google.getAlbumDetail).toHaveBeenNthCalledWith(albums.length-i, albums[i], mockFn);
+            // }
             Google.getAlbumDetail = saved_getAlbumDetail;
         });
 });

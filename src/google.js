@@ -59,21 +59,35 @@ class GooglePhotos {
   }
 
   getAllAlbumDetail(albums, updateUI) {
-    const ALBUM_POOL_SIZE = 10;
-    var p = Promise.resolve();
-    var that = this;
+    const ALBUM_POOL_SIZE = 7;
     const albumsToRetrieve = albums.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
-    for (let i = 0; i < albumsToRetrieve.length; i += ALBUM_POOL_SIZE) {
-      const albumSlice = albumsToRetrieve.slice(i, i + ALBUM_POOL_SIZE);
-      p = p.then(function(value) {
-        return that.getConcurrentAlbumDetail(albumSlice, updateUI);
-      });
+    var that = this;
+    var p = [];
+    var i = 0;
+    while (i < albumsToRetrieve.length && i < ALBUM_POOL_SIZE) {
+      p[i] = Promise.resolve();
+      p[i].then(function(value) {
+        return that.getAlbumDetailQueue(albumsToRetrieve, updateUI);
+      })
+      i++;
     }
-    return p;
+    return Promise.all(p);
   }
 
-  getConcurrentAlbumDetail(albums, updateUI) {
-    return Promise.all(albums.map(album => this.getAlbumDetail(album, updateUI)));
+  getAlbumDetailQueue(albums, updateUI) {
+    var that = this;
+    if (albums.length > 0) {
+      const album = albums.pop();
+      return this.getAlbumDetail(album, updateUI)
+      .then(function(value) {
+        if (albums.length > 0) {
+          return that.getAlbumDetailQueue(albums, updateUI);
+        } else
+          return Promise.resolve();
+      });
+    } else {
+      return Promise.resolve();
+    }
   }
 
   getAlbumDetail(album, updateUI, nextPageToken) {
