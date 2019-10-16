@@ -1,5 +1,6 @@
 import Google  from './google.js';
 import expectExport from 'expect';
+import randomInt from 'random-int';
 
 it('getAllAlbumDetail two albums not already retrieved', () => {
     const albums = 
@@ -47,14 +48,13 @@ it('getAllAlbumDetail two albums already retrieved', () => {
     ];
     const mockFn = jest.fn();
     const getAlbumDetailSaved = Google.getAlbumDetail;
-    const spyGetAlbumDetail = jest.fn();
-    Google.getAlbumDetail = spyGetAlbumDetail;
+    Google.getAlbumDetail = jest.fn();
     
-    Google.getAllAlbumDetail(albums, mockFn);
-
-    expect(spyGetAlbumDetail).not.toHaveBeenCalled();
-
-    Google.getAlbumDetail = getAlbumDetailSaved;
+    return Google.getAllAlbumDetail(albums, mockFn)
+        .then(() => {
+            expect(Google.getAlbumDetail).not.toHaveBeenCalled();
+            Google.getAlbumDetail = getAlbumDetailSaved;
+        });
 });
 
 it('getAllAlbumDetail first of two albums already retrieved', () => {
@@ -112,8 +112,8 @@ it('getAllAlbumDetail no photos property', () => {
     
 });
 
-it('getAllAlbumDetail limit to 10 request', () => {
-    const saved_getAlbumDetail = Google.getAlbumDetail;
+it('getAllAlbumDetail check all retrieved even up to concurrency limit', () => {
+    const getAlbumDetailSaved = Google.getAlbumDetail;
     const albums = 
     [
         { id:"album1",
@@ -197,7 +197,35 @@ it('getAllAlbumDetail limit to 10 request', () => {
             // for (let i = 0; i < albums.length; i++) {
             //     expect(Google.getAlbumDetail).toHaveBeenNthCalledWith(albums.length-i, albums[i], mockFn);
             // }
-            Google.getAlbumDetail = saved_getAlbumDetail;
+            Google.getAlbumDetail = getAlbumDetailSaved;
+        });
+});
+
+it('getAllAlbumDetail check concurrency limit', () => {
+    const getAlbumDetailSaved =Google.getAlbumDetail;
+    const albums = [];
+    for (let i = 0; i < 14; i++) {
+        albums[i] = { id:"album" + i + 1,
+        title:"title" + i + 1, 
+        photos: [],
+        mediaItemsCount: 1
+      }
+    }
+    const mockFn = jest.fn();
+    var current = 0;
+    Google.getAlbumDetail = jest.fn(() => {
+        return new Promise(function(resolve, reject) {
+            current++;
+            expect(current).toBeLessThan(8);
+            setTimeout(() => {
+                resolve();
+                current--;
+            }, randomInt(0, 500));
+        });
+    });
+    return Google.getAllAlbumDetail(albums, mockFn)
+        .then(function(result) {     
+            Google.getAlbumDetail = getAlbumDetailSaved;
         });
 });
 

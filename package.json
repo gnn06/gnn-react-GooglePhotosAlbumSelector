@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "random-int": "^2.0.1",
     "react": "^16.9.0",
     "react-datepicker": "^2.9.6",
     "react-dom": "^16.9.0",
