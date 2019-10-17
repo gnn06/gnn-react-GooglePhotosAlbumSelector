@@ -204,7 +204,7 @@ it('getAllAlbumDetail check all retrieved even up to concurrency limit', () => {
 it('getAllAlbumDetail check concurrency limit', () => {
     const getAlbumDetailSaved =Google.getAlbumDetail;
     const albums = [];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 50; i++) {
         albums[i] = { id:"album" + i + 1,
         title:"title" + i + 1, 
         photos: [],
@@ -212,14 +212,18 @@ it('getAllAlbumDetail check concurrency limit', () => {
       }
     }
     const mockFn = jest.fn();
+    var running = 0;
     var current = 0;
     Google.getAlbumDetail = jest.fn(() => {
         return new Promise(function(resolve, reject) {
+            running++;
             current++;
-            expect(current).toBeLessThan(8);
+            if (current > 7) {
+                expect(running).toEqual(7);
+            }
             setTimeout(() => {
                 resolve();
-                current--;
+                running--;
             }, randomInt(0, 500));
         });
     });
