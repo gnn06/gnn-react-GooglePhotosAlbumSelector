@@ -241,9 +241,11 @@ it('getAlbumDetail no second page', () => {
         }
     };
     const mockUICallback = jest.fn();
+    const mockErrorCallback = jest.fn();
     
-    return Google.getAlbumDetail(album, mockUICallback).then(data => {
+    return Google.getAlbumDetail(album, mockUICallback, mockErrorCallback).then(data => {
         expect(mockUICallback).toHaveBeenCalledWith({"photos": ["id1"]});
+        expect(mockErrorCallback).not.toHaveBeenCalled();
     }
     );
 });
@@ -263,9 +265,11 @@ it('getAlbumDetail with second page', () => {
         }
     };
     const mockUICallback = jest.fn();
+    const mockErrorCallback = jest.fn();
     
     return Google.getAlbumDetail(album, mockUICallback).then(data => {
         expect(mockUICallback).toHaveBeenNthCalledWith(2, {"photos": ["id1","id2"]});
+        expect(mockErrorCallback).not.toHaveBeenCalled();
     }
     );
 });
@@ -283,9 +287,48 @@ it('getAlbumDetail reset photos', () => {
         }
     };
     const mockUICallback = jest.fn();
+    const mockErrorCallback = jest.fn();
     
     return Google.getAlbumDetail(album, mockUICallback).then(value => {
         expect(album.photos).toEqual(["photoid1", "photoid2"]);
+        expect(mockErrorCallback).not.toHaveBeenCalled();
     });
 
+});
+
+
+it('getAlbumDetail exception', () => {
+    const album = {
+        id: "albumid1",
+        photos: [],
+        mediaItemsCount: 2
+    };
+    const error = {
+        code: 429,
+        details: [],
+        message: "quota exceeded",
+        status: "RESOURCE_EXHAUSTED"
+    };
+    global.gapi = {
+        client: {
+            request: jest.fn().mockRejectedValue(
+                {
+                    body:"",
+                    headers: {},
+                    result: {
+                        error: error
+                    },
+                    status: 429,
+                    statusText: null
+                }
+            )
+        }
+    };
+    const mockUICallback = jest.fn();
+    const mockErrorCallback = jest.fn();
+
+    return Google.getAlbumDetail(album, mockUICallback, mockErrorCallback).catch(function(error) {
+        expect(mockUICallback).not.toHaveBeenCalled();
+        expect(mockErrorCallback).toHaveBeenCalledWith(error);
+    });
 });

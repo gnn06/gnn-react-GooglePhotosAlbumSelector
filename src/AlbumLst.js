@@ -36,6 +36,8 @@ export default class AlbumLst extends React.Component {
         albums[index] = album;
       }
       component.props.parent.setState({ albums: albums });
+    }, error => {
+      
     });
   }
 

@@ -58,7 +58,7 @@ class GooglePhotos {
     });
   }
 
-  getAllAlbumDetail(albums, updateUI) {
+  getAllAlbumDetail(albums, updateUI, updateErrorUI) {
     const ALBUM_POOL_SIZE = 7;
     const albumsToRetrieve = albums.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
     var that = this;
@@ -67,21 +67,21 @@ class GooglePhotos {
     while (i < albumsToRetrieve.length && i < ALBUM_POOL_SIZE) {
       p[i] = Promise.resolve();
       p[i].then(function(value) {
-        return that.getAlbumDetailQueue(albumsToRetrieve, updateUI);
+        return that.getAlbumDetailQueue(albumsToRetrieve, updateUI, updateErrorUI);
       })
       i++;
     }
     return Promise.all(p);
   }
 
-  getAlbumDetailQueue(albums, updateUI) {
+  getAlbumDetailQueue(albums, updateUI, updateErrorUI) {
     var that = this;
     if (albums.length > 0) {
       const album = albums.pop();
-      return this.getAlbumDetail(album, updateUI)
+      return this.getAlbumDetail(album, updateUI, updateErrorUI)
       .then(function(value) {
         if (albums.length > 0) {
-          return that.getAlbumDetailQueue(albums, updateUI);
+          return that.getAlbumDetailQueue(albums, updateUI, updateErrorUI);
         } else
           return Promise.resolve();
       });
@@ -90,7 +90,7 @@ class GooglePhotos {
     }
   }
 
-  getAlbumDetail(album, updateUI, nextPageToken) {
+  getAlbumDetail(album, updateUI, updateErrorUI, nextPageToken) {
     // to the callback
     let that = this;
     // if album is already loaded, then abort
@@ -125,12 +125,13 @@ class GooglePhotos {
       }
       updateUI(album);
       return response.result.nextPageToken;
-    }, function(rejected) {
-      console.error(rejected);
     }).then(function(nextPageToken) {
       if (nextPageToken) {
-        return that.getAlbumDetail(album, updateUI, nextPageToken);
+        return that.getAlbumDetail(album, updateUI, updateErrorUI, nextPageToken);
       } else return "";
+    }).catch(function(error) {
+      updateErrorUI(error.result.error);
+      console.error(error);
     });
   }
 };
