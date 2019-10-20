@@ -65,10 +65,7 @@ class GooglePhotos {
     var p = [];
     var i = 0;
     while (i < albumsToRetrieve.length && i < ALBUM_POOL_SIZE) {
-      p[i] = Promise.resolve();
-      p[i].then(function(value) {
-        return that.getAlbumDetailQueue(albumsToRetrieve, updateUI, updateErrorUI);
-      })
+      p[i] = that.getAlbumDetailQueue(albumsToRetrieve, updateUI, updateErrorUI);
       i++;
     }
     return Promise.all(p);

@@ -1,68 +1,32 @@
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-import GooglePhotos from './google.js';
+jest.mock('./google.js');
 
+    import React from 'react';
+import { shallow, mount, render } from 'enzyme';
 import AlbumLst from './AlbumLst.js';
+import GooglePhotos from './google.js';
+import { JestEnvironment } from '@jest/environment';
+import expectExport from 'expect';
 
-let container = null;
-
-/*
-beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-});
-
-afterEach(() => {
-    // cleanup on exiting
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
-});
-
-it("renders with or without a name", () => {
-    const parent = {
+it('AlbumLst, running', async () => {
+    const mockParent = {
         state: {
-            albums: [
-                { id: "albumid1" }
-            ]
+            albums: [{
+                title:"title album1",
+                mediaItemsCount: 1
+            }]
         }
     };
-    act(() => {
-        render(<AlbumLst parent={parent}/>, container);
-    });
-});
-*/
-
-it("renders with or without a name", () => {
-    const compo = new AlbumLst();
-    compo.props = {
-        parent: {
-            state: {
-                albums: [
-                    {
-                        id: "albumid1",
-                        photos: [],
-                        mediaItemsCount: 1
-                    }
-                ]
-            },
-            setState: function (albums) {
-                this.state = albums;
-            }
-        }
-    };
-    compo.component = compo;
-    GooglePhotos.getAllAlbumDetail = function (albums, callback) {
-        albums[0].photos = [{ id: "photoid1" }];
-        callback(albums[0]);
-    };
-    compo.request_allAlbumPhotos();
-    expect(compo.props.parent.state.albums).toEqual([
-        {
-            id: "albumid1",
-            mediaItemsCount: 1,
-            photos: [{ id: "photoid1" }]
-        }
-    ]);
+    GooglePhotos.getAllAlbumDetail = jest.fn(() => {
+            expect(wrapper.find("div#running")).toHaveLength(1);
+            return Promise.resolve();
+        });
+    const wrapper = shallow(<AlbumLst parent={mockParent}/>);
+    
+    expect(wrapper.find("div#running")).toHaveLength(0);
+    
+    wrapper.find("button#request-all-album-photos").simulate('click');    
+    
+    // necessary to wait the finally that change state
+    await Promise.resolve();
+    expect(wrapper.find("div#running")).toHaveLength(0);
 });

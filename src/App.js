@@ -103,7 +103,7 @@ class App extends React.Component {
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
           <DateFilter dateFilterHandle={this.dateFilterHandle}/>
-          <AlbumLst ref="albumLst" parent={this} 
+          <AlbumLst parent={this} 
             hideAlbumHandle={this.hideAlbumHandle}
             showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
         </div>

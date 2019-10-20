@@ -233,6 +233,39 @@ it('getAllAlbumDetail check concurrency limit', () => {
         });
 });
 
+it('getAllAlbumDetail promise all resolved after detail', () => {
+    const getAlbumDetailQueue_saved = Google.getAlbumDetailQueue;
+    const getAlbumDetail_saved = Google.getAlbumDetail;
+
+    const albums = [];
+    for (let i = 0; i < 50; i++) {
+        albums[i] = { id:"album" + i + 1,
+        title:"title" + i + 1, 
+        photos: [],
+        mediaItemsCount: 1
+      }
+    }
+    
+    const mockUICallback = jest.fn();
+    const mockErrorCallback = jest.fn();
+
+    var queueFinished = 0;
+
+    Google.getAlbumDetail = jest.fn().mockImplementation(() => {
+        return Promise.resolve()
+        .then(function(value) {
+            queueFinished++;
+        });
+    });
+
+    return Google.getAllAlbumDetail(albums, mockUICallback, mockErrorCallback)
+    .then(() => {
+        expect(queueFinished).toEqual(50);
+        Google.getAlbumDetailQueue = getAlbumDetailQueue_saved;
+        Google.getAlbumDetail = getAlbumDetail_saved;
+    });
+});
+
 it('getAlbumDetail no second page', () => {
     const album = {};
     global.gapi = {
