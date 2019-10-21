@@ -80,10 +80,10 @@ class GooglePhotos {
         if (albums.length > 0) {
           return that.getAlbumDetailQueue(albums, updateUI, updateErrorUI);
         } else
-          return Promise.resolve();
+          return ;
       });
     } else {
-      return Promise.resolve();
+      return ;
     }
   }
 
