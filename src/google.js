@@ -60,16 +60,8 @@ class GooglePhotos {
   }
 
   getAllAlbumDetail(albums, updateUI, updateErrorUI) {
-    const ALBUM_POOL_SIZE = 7;
     const albumsToRetrieve = albums.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
-    var that = this;
-    var p = [];
-    var i = 0;
-    while (i < albumsToRetrieve.length && i < ALBUM_POOL_SIZE) {
-      p[i] = GoogleQueue.getAlbumDetailQueue(albumsToRetrieve, updateUI, updateErrorUI, this.getAlbumDetail);
-      i++;
-    }
-    return Promise.all(p);
+    return GoogleQueue.getAllAlbumDetail(albumsToRetrieve, updateUI, updateErrorUI, this.getAlbumDetail);
   }
 
     getAlbumDetail(album, updateUI, updateErrorUI, nextPageToken) {
