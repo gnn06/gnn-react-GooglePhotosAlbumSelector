@@ -61,7 +61,7 @@ class GooglePhotos {
 
   getAllAlbumDetail(albums, updateUI, updateErrorUI) {
     const albumsToRetrieve = albums.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
-    return GoogleQueue.getAllAlbumDetail(albumsToRetrieve, updateUI, updateErrorUI, this.getAlbumDetail);
+    return GoogleQueue.getAllAlbumDetail(albumsToRetrieve, updateUI, updateErrorUI, this.getAlbumDetail.bind(this));
   }
 
     getAlbumDetail(album, updateUI, updateErrorUI, nextPageToken) {
