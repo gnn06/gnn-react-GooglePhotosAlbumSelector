@@ -1,4 +1,5 @@
 import Google  from './google.js';
+import GoogleQueue from './google-queue.js';
 import expectExport from 'expect';
 import randomInt from 'random-int';
 
@@ -140,14 +141,14 @@ it('getAllAlbumDetail promise queue resolved after detail', () => {
 
     var queueFinished = 0;
 
-    Google.getAlbumDetail = jest.fn().mockImplementation(() => {
+    var mockGetAlbumDetail = jest.fn().mockImplementation(() => {
         return Promise.resolve()
         .then(function(value) {
             queueFinished++;
         });
     });
 
-    return Google.getAlbumDetailQueue(albums, mockUICallback, mockErrorCallback)
+    return GoogleQueue.getAlbumDetailQueue(albums, mockUICallback, mockErrorCallback, mockGetAlbumDetail)
     .then(() => {
         expect(queueFinished).toEqual(50);
         Google.getAlbumDetail = getAlbumDetail_saved;

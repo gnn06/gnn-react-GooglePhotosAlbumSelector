@@ -1,4 +1,5 @@
 /*global gapi */
+import GoogleQueue from './google-queue.js';
 
 class GooglePhotos {
   addPhotoToAlbum(photoIdLst, albumId) {
@@ -65,29 +66,13 @@ class GooglePhotos {
     var p = [];
     var i = 0;
     while (i < albumsToRetrieve.length && i < ALBUM_POOL_SIZE) {
-      p[i] = that.getAlbumDetailQueue(albumsToRetrieve, updateUI, updateErrorUI);
+      p[i] = GoogleQueue.getAlbumDetailQueue(albumsToRetrieve, updateUI, updateErrorUI, this.getAlbumDetail);
       i++;
     }
     return Promise.all(p);
   }
 
-  getAlbumDetailQueue(albums, updateUI, updateErrorUI) {
-    var that = this;
-    if (albums.length > 0) {
-      const album = albums.pop();
-      return this.getAlbumDetail(album, updateUI, updateErrorUI)
-      .then(function(value) {
-        if (albums.length > 0) {
-          return that.getAlbumDetailQueue(albums, updateUI, updateErrorUI);
-        } else
-          return ;
-      });
-    } else {
-      return ;
-    }
-  }
-
-  getAlbumDetail(album, updateUI, updateErrorUI, nextPageToken) {
+    getAlbumDetail(album, updateUI, updateErrorUI, nextPageToken) {
     // to the callback
     let that = this;
     // if album is already loaded, then abort
