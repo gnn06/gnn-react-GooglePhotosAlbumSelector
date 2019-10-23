@@ -12,6 +12,7 @@ it('AlbumLst, running', async () => {
         state: {
             albums: [{
                 title:"title album1",
+                id:"albumid1",
                 mediaItemsCount: 1
             }]
         }
