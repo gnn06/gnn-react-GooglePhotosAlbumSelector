@@ -7,7 +7,8 @@ import GooglePhotos from './google.js';
 import { JestEnvironment } from '@jest/environment';
 import expectExport from 'expect';
 
-it('AlbumLst, running', async () => {
+it('AlbumLst, check running div', async () => {
+    // GIVEN
     const mockParent = {
         state: {
             albums: [{
@@ -25,9 +26,11 @@ it('AlbumLst, running', async () => {
     
     expect(wrapper.find("div#running")).toHaveLength(0);
     
+    //WHEN
     wrapper.find("button#request-all-album-photos").simulate('click');    
     
     // necessary to wait the finally that change state
     await Promise.resolve();
+    // THEN
     expect(wrapper.find("div#running")).toHaveLength(0);
 });

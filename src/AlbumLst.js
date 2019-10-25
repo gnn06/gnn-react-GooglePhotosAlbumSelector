@@ -10,7 +10,8 @@ export default class AlbumLst extends React.Component {
     this.state = {
       selectedAlbum: [],
       error: false,
-      running: false
+      running: false,
+      previousAlbums: []
     }
     this.request_albums = this.request_albums.bind(this);
     this.store_albums = this.store_albums.bind(this);
@@ -23,6 +24,7 @@ export default class AlbumLst extends React.Component {
 
   request_albums() {
     var component = this;
+    component.props.parent.setState({ albums: [] });
     GooglePhotos.getAlbums(null, albums => {
       component.props.parent.setState({ albums: component.props.parent.state.albums.concat(albums) });
     });
@@ -30,6 +32,7 @@ export default class AlbumLst extends React.Component {
 
   request_allAlbumPhotos() {
     const albums = this.props.parent.state.albums;
+    const previousAlbums = this.state.previousAlbums;
     var component = this;
     component.setState({error: false, running: true});
     GooglePhotos.getAllAlbumDetail(albums, (album) => {
@@ -41,7 +44,7 @@ export default class AlbumLst extends React.Component {
       component.props.parent.setState({ albums: albums });
     }, error => {
       component.setState({error: true});
-    }).finally(function() {
+    }, previousAlbums).finally(function() {
       component.setState({ running: false });
     });
   }
@@ -53,6 +56,7 @@ export default class AlbumLst extends React.Component {
   restore_albums() {
     var albums = JSON.parse(localStorage.getItem('albums'));
     this.props.parent.setState({ albums: albums });
+    this.setState({previousAlbums: albums});
   }
 
   selectAlbumHandle(albumId, selected) {

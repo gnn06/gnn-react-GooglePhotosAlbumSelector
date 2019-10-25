@@ -1,59 +1,105 @@
 import * as AlbumUtil from './album-utils.js';
 import expectExport from 'expect';
 
-it('filtered', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([{id:"album1", title:"title1"}], ["album1"]);
-    expect(filtered).toEqual(true);
+describe('1', () => {
+    it('filtered', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([{ id: "album1", title: "title1" }], ["album1"]);
+        expect(filtered).toEqual(true);
+    });
+
+    it('not filtered, other hidden album', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([{ id: "album1", title: "title1" }], ["album2"]);
+        expect(filtered).toEqual(false);
+    });
+
+    it('hasAllAlbumToHide, not filtered, no album', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([], ["album1"]);
+        expect(filtered).toEqual(false);
+    });
+
+    it('hasAllAlbumToHide, not filtered, no hidden album', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([{ id: "album1", title: "title1" }], []);
+        expect(filtered).toEqual(false);
+    });
+
+    it('hasAllAlbumToHide, not filterd two empty album list', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([], []);
+        expect(filtered).toEqual(false);
+    });
+
+    it('hasAllAlbumToHide, not filtered because other album', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([{ id: "album1", title: "title1" }, { id: "album2", title: "title2" }], ["album1"]);
+        expect(filtered).toEqual(false);
+    });
+
+    it('hasAllAlbumToHide, not filtered because other album bis', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([{ id: "album1", title: "title1" }, { id: "album2", title: "title2" }], ["album2"]);
+        expect(filtered).toEqual(false);
+    });
+
+    it('hasAllAlbumToHide, filtered because of 2 hidden albums', () => {
+        const filtered = AlbumUtil.hasAllAlbumToHide([{ id: "album1", title: "title1" }, { id: "album2", title: "title2" }], ["album1", "album2"]);
+        expect(filtered).toEqual(true);
+    });
+
+
+    it('filterOneAlbum, filtered', () => {
+        const filtered = AlbumUtil.filterOneAlbum([{ id: "photo1", albums: [{ id: "album1" }] }], ["album1"]);
+        expect(filtered).toEqual([]);
+    });
+
+    it('filterOneAlbum, not filtered', () => {
+        const filtered = AlbumUtil.filterOneAlbum([{ id: "photo1", albums: [{ id: "album1" }] }], ["album2"]);
+        expect(filtered).toEqual([{ id: "photo1", albums: [{ id: "album1" }] }]);
+    });
+
+    it('filterOneAlbum, nothing to filter', () => {
+        const filtered = AlbumUtil.filterOneAlbum([{ id: "photo1", albums: [{ id: "album1" }] }], []);
+        expect(filtered).toEqual([{ id: "photo1", albums: [{ id: "album1" }] }]);
+    });
+
 });
 
-it('not filtered, other hidden album', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([{id:"album1", title:"title1"}], ["album2"]);
-    expect(filtered).toEqual(false);
+describe('filterSameTail', () => {
+    test('same lists', () => {
+        const albums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}];
+        const otherAlbums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}];
+        const [result, tail] = AlbumUtil.filterSameTail(albums, otherAlbums);
+        expect(result).toEqual([]);
+        expect(tail).toEqual(otherAlbums);
+    });
+    
+    test('maching tail', () => {
+        const albums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}];
+        const otherAlbums = [{id:"albmid2"}, {id:"albmid1"}, {id:"albmid3"}];
+        const [result, tail] = AlbumUtil.filterSameTail(albums, otherAlbums);
+        expect(result).toEqual([{id:"albmid1"}, {id:"albmid2"}]);
+        expect(tail).toEqual(otherAlbums.slice(2, 3));
+    });
+
+    test('no maching tail', () => {
+        const albums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}];
+        const otherAlbums = [{id:"albmid3"}, {id:"albmid2"}, {id:"albmid1"}];
+        const [result, tail] = AlbumUtil.filterSameTail(albums, otherAlbums);
+        expect(result).toEqual([{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}]);
+        expect(tail).toEqual([]);
+    });
+
+    test('empty other argument', () => {
+        const albums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}];
+        const otherAlbums = [];
+        const [result, tail] = AlbumUtil.filterSameTail(albums, otherAlbums);
+        expect(result).toEqual([{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}]);
+        expect(otherAlbums).toEqual([]);
+    })
+
+    test('don\'alter argument', () => {
+        const albums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3"}];
+        const otherAlbums = [{id:"albmid1"}, {id:"albmid2"}, {id:"albmid3", photos:["photoid1"]}];
+        const saved_albums = albums.slice();
+        const saved_otherAlbums = otherAlbums.slice();
+        const result = AlbumUtil.filterSameTail(albums, otherAlbums);
+        expect(albums).toEqual(saved_albums);
+        expect(otherAlbums).toEqual(saved_otherAlbums);
+    });
 });
-
-it('hasAllAlbumToHide, not filtered, no album', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([], ["album1"]);
-    expect(filtered).toEqual(false);
-});
-
-it('hasAllAlbumToHide, not filtered, no hidden album', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([{id:"album1", title:"title1"}], []);
-    expect(filtered).toEqual(false);
-});
-
-it('hasAllAlbumToHide, not filterd two empty album list', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([], []);
-    expect(filtered).toEqual(false);
-});
-
-it('hasAllAlbumToHide, not filtered because other album', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([{id:"album1", title:"title1"}, {id:"album2", title:"title2"}], ["album1"]);
-    expect(filtered).toEqual(false);
-});
-
-it('hasAllAlbumToHide, not filtered because other album bis', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([{id:"album1", title:"title1"}, {id:"album2", title:"title2"}], ["album2"]);
-    expect(filtered).toEqual(false);
-});
-
-it('hasAllAlbumToHide, filtered because of 2 hidden albums', () => {
-    const filtered = AlbumUtil.hasAllAlbumToHide([{id:"album1", title:"title1"}, {id:"album2", title:"title2"}], ["album1", "album2"]);
-    expect(filtered).toEqual(true);
-});
-
-
-it('filterOneAlbum, filtered', () => {
-    const filtered = AlbumUtil.filterOneAlbum([{id:"photo1", albums:[{id:"album1"}]}], ["album1"]);
-    expect(filtered).toEqual([]);
-});
-
-it('filterOneAlbum, not filtered', () => {
-    const filtered = AlbumUtil.filterOneAlbum([{id:"photo1", albums:[{id:"album1"}]}], ["album2"]);
-    expect(filtered).toEqual([{id:"photo1", albums:[{id:"album1"}]}]);
-});
-
-it('filterOneAlbum, nothing to filter', () => {
-    const filtered = AlbumUtil.filterOneAlbum([{id:"photo1", albums:[{id:"album1"}]}], []);
-    expect(filtered).toEqual([{id:"photo1", albums:[{id:"album1"}]}]);
-});
-

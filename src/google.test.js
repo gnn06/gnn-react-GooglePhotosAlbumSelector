@@ -2,8 +2,22 @@ import Google  from './google.js';
 import expectExport from 'expect';
 import randomInt from 'random-int';
 
-describe('getAllAlbumDetail, already retrieved', () => {
-    it('getAllAlbumDetail two albums not already retrieved', () => {
+describe('getAllAlbumDetail', () => {
+
+    var mockCallbackUI, mockCallbackError;
+    var getAlbumDetailSaved;
+
+    beforeAll(() => {
+        mockCallbackUI = jest.fn();
+        mockCallbackError = jest.fn();
+        getAlbumDetailSaved = Google.getAlbumDetail;
+    });
+
+    afterAll(() => {
+        Google.getAlbumDetail = getAlbumDetailSaved;
+    });
+
+    test('two albums not already retrieved', () => {
         const albums = 
         [
             { id:"album1",
@@ -17,21 +31,18 @@ describe('getAllAlbumDetail, already retrieved', () => {
               mediaItemsCount: 1
             }
         ];
-        const mockFn = jest.fn();
-        const getAlbumDetailSaved = Google.getAlbumDetail;
         const spyGetAlbumDetail = jest.fn().mockResolvedValue();
         Google.getAlbumDetail = spyGetAlbumDetail;
         
-        return Google.getAllAlbumDetail(albums, mockFn)
+        return Google.getAllAlbumDetail(albums, mockCallbackUI, mockCallbackError, [])
             .then(function(result){
                 expect(spyGetAlbumDetail).toHaveBeenCalledTimes(2);
-                Google.getAlbumDetail = getAlbumDetailSaved;
             });
     
         
     });
 
-    it('getAllAlbumDetail two albums already retrieved', () => {
+    test('two albums already retrieved', () => {
         const albums = 
         [
             {
@@ -47,20 +58,15 @@ describe('getAllAlbumDetail, already retrieved', () => {
                 mediaItemsCount: 1
             }
         ];
-        const mockFn = jest.fn();
-        const getAlbumDetailSaved = Google.getAlbumDetail;
         Google.getAlbumDetail = jest.fn();
         
-        return Google.getAllAlbumDetail(albums, mockFn)
+        return Google.getAllAlbumDetail(albums, mockCallbackUI,mockCallbackError, [])
             .then(() => {
                 expect(Google.getAlbumDetail).not.toHaveBeenCalled();
-                Google.getAlbumDetail = getAlbumDetailSaved;
             });
     });
     
-    it('getAllAlbumDetail first of two albums already retrieved', () => {
-        const getAlbumDetailSaved = Google.getAlbumDetail;
-    
+    test('first of two albums already retrieved', () => {
         const albums = 
         [
             {
@@ -76,34 +82,40 @@ describe('getAllAlbumDetail, already retrieved', () => {
                 mediaItemsCount: 1
             }
         ];
-        const mockFn = jest.fn();
+        
         const spyGetAlbumDetail = jest.fn().mockResolvedValue();
         Google.getAlbumDetail = spyGetAlbumDetail;
         
-        return Google.getAllAlbumDetail(albums, mockFn)
+        return Google.getAllAlbumDetail(albums, mockCallbackUI, mockCallbackError, [])
             .then(function(result) {
                 expect(spyGetAlbumDetail).toHaveBeenCalledTimes(1);
-                Google.getAlbumDetail = getAlbumDetailSaved;
             });
-    
-        
     });
     
-    test('getAllAlbumDetail, use previous albums order to not retrieve unchanged album detail', () => {
-        // Given
-        const previousAlbums = [];
-        const currentAlbums = [];
-        // When
-        return Google.getAllAlbumDetail(currentAlbums, mockFn, previousAlbums)
+    test('use previous albums order to not retrieve unchanged album detail', () => {
+        // GIVEN
+        const previousAlbums = [{id:"albumid1"}, {id:"albumid2"}, {id:"albumid3", photos:["photoid1"]}];
+        const  currentAlbums = [{id:"albumid2"}, {id:"albumid1"}, {id:"albumid3"}];
+
+        // mock GoogleQueue.getAllAlbumDetail
+        Google.getAlbumDetail = jest.fn().mockResolvedValue();
+
+        // WHEN
+        return Google.getAllAlbumDetail(currentAlbums, mockCallbackUI, mockCallbackError, previousAlbums)
         .then(function(result) {
-            // Then 
-            // Call getDetail only on changed abums
+            // THEN 
+            // Call getDetail only on changed albums
+            // Do not call getDetail for albumid3
+            expect(Google.getAlbumDetail).toHaveBeenCalledTimes(2);
+            expect(Google.getAlbumDetail).toHaveBeenNthCalledWith(1, currentAlbums[1], mockCallbackUI, mockCallbackError);
+            expect(Google.getAlbumDetail).toHaveBeenNthCalledWith(2, currentAlbums[0], mockCallbackUI, mockCallbackError);
+
+            expect(mockCallbackUI).toHaveBeenCalledTimes(1);
+            expect(mockCallbackUI).toHaveBeenNthCalledWith(1, previousAlbums[2]);
         })
     });
 
-    test('getAllAlbumDetail no photos property', () => {
-        const getAlbumDetailSaved = Google.getAlbumDetail;
-    
+    test('no photos property', () => {
         const albums = 
         [
             {
@@ -112,17 +124,13 @@ describe('getAllAlbumDetail, already retrieved', () => {
                 mediaItemsCount: 1
             }
         ];
-        const mockFn = jest.fn();
         const spyGetAlbumDetail = jest.fn().mockResolvedValue();
         Google.getAlbumDetail = spyGetAlbumDetail;
         
-        return Google.getAllAlbumDetail(albums, mockFn)
+        return Google.getAllAlbumDetail(albums, mockCallbackUI, mockCallbackError, [])
             .then(function(result) {
                 expect(spyGetAlbumDetail).toHaveBeenCalledTimes(1);
-                Google.getAlbumDetail = getAlbumDetailSaved;
             });
-    
-        
     });    
 });
 

@@ -1,5 +1,6 @@
 /*global gapi */
 import GoogleQueue from './google-queue.js';
+import { filterSameTail } from './album-utils.js';
 
 class GooglePhotos {
   addPhotoToAlbum(photoIdLst, albumId) {
@@ -59,8 +60,16 @@ class GooglePhotos {
     });
   }
 
-  getAllAlbumDetail(albums, updateUI, updateErrorUI) {
-    const albumsToRetrieve = albums.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
+  getAllAlbumDetail(albums, updateUI, updateErrorUI, previousAlbums) {
+    // filter to discard previous unchanged albums
+    var [albumsToRetrieve, albumsUnchanged] = filterSameTail(albums, previousAlbums);
+    // filter to discard already retrieved albums
+    albumsToRetrieve = albumsToRetrieve.filter(album => album.photos === undefined || album.photos.length < album.mediaItemsCount);
+
+    for (const album of albumsUnchanged) {
+      updateUI(album);
+    }
+
     return GoogleQueue.getAllAlbumDetail(albumsToRetrieve, updateUI, updateErrorUI, this.getAlbumDetail.bind(this));
   }
 

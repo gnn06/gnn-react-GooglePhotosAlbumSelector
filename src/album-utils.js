@@ -16,3 +16,29 @@ export function hasAllAlbumToHide(photoAlbum, albumsToHide) {
         return false;
     }
 }
+
+export function filterSameTail(albums, otherAlbums) {
+    const commonTail = [];
+    
+    if (otherAlbums.length == 0) {
+        return [albums, commonTail];
+    }
+
+    albums = albums.slice();
+    otherAlbums = otherAlbums.slice();
+
+
+    var stop = false;
+    do {
+        var last = albums.pop();
+        var lastOther = otherAlbums.pop();
+        if (last.id != lastOther.id) {
+            albums.push(last);
+            stop = true;
+        } else {
+            commonTail.unshift(lastOther);
+        }
+    } while (!stop && albums.length > 0 && otherAlbums.length > 0);
+
+    return [albums, commonTail];
+}
