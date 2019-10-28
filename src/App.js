@@ -2,7 +2,7 @@
 import React from 'react';
 import './App.css';
 import AlbumLst from './AlbumLst.js';
-import ImageList from './photoList.js';
+import ImageList from './ImageLst.js';
 import DateFilter from './DateFilter.js';
 
 var GoogleAuth; // Google Auth object.
@@ -108,7 +108,8 @@ class App extends React.Component {
             showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
         </div>
         <ImageList albums={this.state.albums}
-          hideAlbum={this.state.hideAlbums}/>
+          hideAlbum={this.state.hideAlbums}
+          dateFilter={this.state.dateFilter}/>
       </div>
     );
   }

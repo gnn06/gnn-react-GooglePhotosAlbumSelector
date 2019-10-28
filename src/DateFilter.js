@@ -32,7 +32,7 @@ export default class DateFilter extends React.Component {
         return <div>
             De <DatePicker selected={this.state.startDate} onChange={date => this.setStartDate(date)}/> 
                         à <DatePicker selected={this.state.endDate} onChange={date => this.setEndDate(date)}/>
-            <button onClick={this.dateFilterSubmit}>filter</button>
+            <button className="btn btn-primary" onClick={this.dateFilterSubmit}>filter</button>
         </div>;
     }
     
