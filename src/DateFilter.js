@@ -1,13 +1,17 @@
 import React from 'react';
-import DatePicker  from 'react-datepicker';
+import DatePicker, { registerLocale }  from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import fr from "date-fns/locale/fr";
+import moment from 'moment';
+
+registerLocale("fr", fr);
 
 export default class DateFilter extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            startDate: new Date(),
+            startDate: moment().startOf('month').toDate(),
             endDate: new Date()
         }
 
@@ -30,8 +34,16 @@ export default class DateFilter extends React.Component {
 
     render() {
         return <div>
-            De <DatePicker selected={this.state.startDate} onChange={date => this.setStartDate(date)}/> 
-                        à <DatePicker selected={this.state.endDate} onChange={date => this.setEndDate(date)}/>
+            De <DatePicker
+                    selected={this.state.startDate}
+                    onChange={date => this.setStartDate(date)}
+                    locale="fr"
+                    dateFormat="dd/MM/yyyy"/> 
+            à <DatePicker 
+                    selected={this.state.endDate}
+                    onChange={date => this.setEndDate(date)}
+                    locale="fr"
+                    dateFormat="dd/MM/yyyy"/>
             <button className="btn btn-primary" onClick={this.dateFilterSubmit}>filter</button>
         </div>;
     }
