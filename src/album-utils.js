@@ -42,3 +42,12 @@ export function filterSameTail(albums, otherAlbums) {
 
     return [albums, commonTail];
 }
+
+export function filterDate(photos, dateFilter) {
+    // "2019-10-27T15:15:31Z" = ISO 8601
+    return photos.filter(photo => {
+        const photoDate = new Date(photo.mediaMetadata.creationTime);
+        return (dateFilter.end == null ? true : photoDate <= dateFilter.end) 
+        && (dateFilter.start == null ? true : photoDate >= dateFilter.start);
+    });
+}

@@ -92,6 +92,10 @@ export default class ImageList extends React.Component {
     };
   }
 
+  getFilteredPhoto(photos, hideAlbum, dateFilter) {
+    return AlbumUtil.filterDate(AlbumUtil.filterOneAlbum(photos, hideAlbum), dateFilter);
+  }
+
   render() {
     const loader = <div className="loader">Loading ...</div>;
     return <div className="photo-panel">
@@ -117,7 +121,7 @@ export default class ImageList extends React.Component {
       <InfiniteScroll className="grille" pageStart={0} loadMore={this.loadItems.bind(this)}
         hasMore={this.state.hasMoreItems}
         loader={loader}>
-        {AlbumUtil.filterOneAlbum(this.state.photos, this.props.hideAlbum).map(item =>
+        {this.getFilteredPhoto(this.state.photos, this.props.hideAlbum, this.props.dateFilter).map(item =>
           <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
             id={item.id} key={item.id}
             albums={item.albums}

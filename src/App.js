@@ -15,7 +15,10 @@ class App extends React.Component {
       albums: [],
       hideAlbums: [],
       showOnlyAlbums: [],
-      dateFilter: undefined
+      dateFilter: {
+        start: null,
+        end: null
+      }
     };
 
     this.updateSigninStatus = this.updateSigninStatus.bind(this);

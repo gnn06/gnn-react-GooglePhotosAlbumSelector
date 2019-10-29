@@ -103,3 +103,73 @@ describe('filterSameTail', () => {
         expect(otherAlbums).toEqual(saved_otherAlbums);
     });
 });
+
+describe('filterDate', () => {
+
+    const photos = [
+        {
+            mediaMetadata: {
+                creationTime: "2019-01-01T12:00:00Z"
+            }
+        },
+        {
+            mediaMetadata: {
+                creationTime: "2019-01-02T12:00:00Z"
+            }
+        },
+        {
+            mediaMetadata: {
+                creationTime: "2019-01-03T12:00:00Z"
+            }
+        }
+
+    ];
+
+    test('filter', () => {
+        // GIVEN
+        const dateFilter = {
+            start: new Date("2019-01-02T00:00:00Z"),
+            end: new Date("2019-01-02T23:59:59Z")
+        };
+        // WHEN
+        const result = AlbumUtil.filterDate(photos, dateFilter);
+        // THEN
+        expect(result).toEqual(photos.slice(1, 2));
+    });
+
+    test('filter nothing', () => {
+        // GIVEN        
+        const dateFilter = {
+            start: new Date("2019-01-01T00:00:00Z"),
+            end: new Date("2019-01-04T23:59:59Z")
+        };
+        // WHEN
+        const result = AlbumUtil.filterDate(photos, dateFilter);
+        // THEN
+        expect(result).toEqual(photos);
+    });
+
+    test('filter all', () => {
+        // GIVEN        
+        const dateFilter = {
+            start: new Date("2019-01-02T08:00:00Z"),
+            end: new Date("2019-01-02T09:00:00Z")
+        };
+        // WHEN
+        const result = AlbumUtil.filterDate(photos, dateFilter);
+        // THEN
+        expect(result).toEqual([]);
+    });
+
+    test('null filter', () => {
+        // GIVEN        
+        const dateFilter = {
+            start: null,
+            end: null
+        };
+        // WHEN
+        const result = AlbumUtil.filterDate(photos, dateFilter);
+        // THEN
+        expect(result).toEqual(photos);
+    });
+});
