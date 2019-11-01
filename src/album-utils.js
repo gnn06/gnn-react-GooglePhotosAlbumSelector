@@ -20,7 +20,7 @@ export function hasAllAlbumToHide(photoAlbum, albumsToHide) {
 export function filterSameTail(albums, otherAlbums) {
     const commonTail = [];
     
-    if (otherAlbums.length == 0) {
+    if (otherAlbums.length === 0) {
         return [albums, commonTail];
     }
 
@@ -32,7 +32,7 @@ export function filterSameTail(albums, otherAlbums) {
     do {
         var last = albums.pop();
         var lastOther = otherAlbums.pop();
-        if (last.id != lastOther.id) {
+        if (last.id !== lastOther.id) {
             albums.push(last);
             stop = true;
         } else {

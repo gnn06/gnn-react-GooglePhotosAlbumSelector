@@ -104,7 +104,7 @@ class App extends React.Component {
   }
 
   getPhotosHandle(photos, nextPageToken) {
-    this.setState({photos: photos, nextPageToken: nextPageToken, hasMoreItems: nextPageToken != undefined});
+    this.setState({photos: photos, nextPageToken: nextPageToken, hasMoreItems: nextPageToken !== undefined});
   }
 
   render () {
