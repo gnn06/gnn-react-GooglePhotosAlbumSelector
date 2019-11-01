@@ -11,40 +11,46 @@ export default class ImageList extends React.Component {
     super(props);
     this.state = {
       tracks: [],
-      hasMoreItems: true,
       nextHref: null,
-      photos: [],
       selected: new Set(),
       modalIsOpen: false
     };
-    this.request_photos = this.request_photos.bind(this);
-    this.addAlbum       = this.addAlbum.bind(this);
-    this.removeAlbum    = this.removeAlbum.bind(this);
-    this.openModal      = this.openModal.bind(this);
-    this.closeModal     = this.closeModal.bind(this);
-    this.handleChooseAlbum = this.handleChooseAlbum.bind(this);
+    this.startRequestPhotos = this.startRequestPhotos.bind(this);
+    this.addAlbum           = this.addAlbum.bind(this);
+    this.removeAlbum        = this.removeAlbum.bind(this);
+    this.openModal          = this.openModal.bind(this);
+    this.closeModal         = this.closeModal.bind(this);
+    this.handleChooseAlbum  = this.handleChooseAlbum.bind(this);
+  }
+
+  startRequestPhotos() {
+    this.setState({nextPageToken: undefined});
+    this.request_photos();
   }
 
   request_photos() {
     var component = this;
-    const nextPageToken = this.state.nextPageToken;
+    const nextPageToken = this.props.nextPageToken;
 
-    GooglePhotos.getPhotos(nextPageToken)
+    GooglePhotos.getPhotos(this.props.dateFilter, nextPageToken)
       .then(function(response) {
-        const statePhotoList = component.state.photos;
+        const statePhotoList = component.props.photos;
         const newPhotoList = statePhotoList.concat(response.result.mediaItems.map(
           photo => {
             photo.albums = AlbumUtil.getAlbumsPhoto(photo.id, component.props.albums);
             return photo;
           }
         ));
-        component.setState({
-          photos: newPhotoList,
-          nextPageToken : response.result.nextPageToken
-        });
+        component.props.getPhotosHandler(newPhotoList, response.result.nextPageToken);
       }, function(error) {
         console.error(error);
       });
+  }
+
+  loadItems(page) {
+    if (gapi.client !== undefined) {
+      this.request_photos();
+    };
   }
 
   addAlbum(photoId) {
@@ -86,12 +92,6 @@ export default class ImageList extends React.Component {
     }
   }*/
 
-  loadItems(page) {
-    if (gapi.client !== undefined) {
-      this.request_photos();
-    };
-  }
-
   getFilteredPhoto(photos, hideAlbum, dateFilter) {
     return AlbumUtil.filterDate(AlbumUtil.filterOneAlbum(photos, hideAlbum), dateFilter);
   }
@@ -119,9 +119,9 @@ export default class ImageList extends React.Component {
       <button onClick={this.request_photos}>request photo</button>
 
       <InfiniteScroll className="grille" pageStart={0} loadMore={this.loadItems.bind(this)}
-        hasMore={this.state.hasMoreItems}
+        hasMore={this.props.hasMoreItems}
         loader={loader}>
-        {this.getFilteredPhoto(this.state.photos, this.props.hideAlbum, this.props.dateFilter).map(item =>
+        {this.getFilteredPhoto(this.props.photos, this.props.hideAlbum, this.props.dateFilter).map(item =>
           <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
             id={item.id} key={item.id}
             albums={item.albums}

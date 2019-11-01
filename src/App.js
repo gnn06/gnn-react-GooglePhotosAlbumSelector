@@ -4,6 +4,7 @@ import './App.css';
 import AlbumLst from './AlbumLst.js';
 import ImageList from './ImageLst.js';
 import DateFilter from './DateFilter.js';
+import moment from 'moment';
 
 var GoogleAuth; // Google Auth object.
 
@@ -13,12 +14,15 @@ class App extends React.Component {
     super(props);
     this.state = {
       albums: [],
+      photos: [],
       hideAlbums: [],
       showOnlyAlbums: [],
       dateFilter: {
-        start: null,
-        end: null
-      }
+        start: moment().startOf('month').toDate(),
+        end: new Date()
+      },
+      nextPageToken: undefined,
+      hasMoreItems: false
     };
 
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
@@ -27,6 +31,7 @@ class App extends React.Component {
     this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
     this.showOnlyAlbumHandle = this.showOnlyAlbumHandle.bind(this);
     this.dateFilterHandle = this.dateFilterHandle.bind(this);
+    this.getPhotosHandle = this.getPhotosHandle.bind(this);
 
     gapi.load('client', this.start);
   }
@@ -95,7 +100,11 @@ class App extends React.Component {
   }
 
   dateFilterHandle(dateFilter) {
-    this.setState({dateFilter: dateFilter})
+    this.setState({dateFilter: dateFilter, nextPageToken: undefined, photos: [], hasMoreItems: true});
+  }
+
+  getPhotosHandle(photos, nextPageToken) {
+    this.setState({photos: photos, nextPageToken: nextPageToken, hasMoreItems: nextPageToken != undefined});
   }
 
   render () {
@@ -105,14 +114,17 @@ class App extends React.Component {
         <div className="album-panel">
           <button onClick={this.signin}>sign in</button>
           <button onClick={this.signout}>sign out</button>
-          <DateFilter dateFilterHandle={this.dateFilterHandle}/>
+          <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
           <AlbumLst parent={this} 
             hideAlbumHandle={this.hideAlbumHandle}
             showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
         </div>
-        <ImageList albums={this.state.albums}
+        <ImageList albums={this.state.albums} photos={this.state.photos}
           hideAlbum={this.state.hideAlbums}
-          dateFilter={this.state.dateFilter}/>
+          dateFilter={this.state.dateFilter}
+          nextPageToken={this.state.nextPageToken}
+          getPhotosHandler={this.getPhotosHandle}
+          hasMoreItems={this.state.hasMoreItems}/>
       </div>
     );
   }

@@ -1,6 +1,15 @@
 /*global gapi */
 import GoogleQueue from './google-queue.js';
 import { filterSameTail } from './album-utils.js';
+import moment from 'moment';
+
+function getGoogleDate(date) {
+  return {
+    "year": moment(date).year(),
+    "month": moment(date).month() + 1,
+    "day": moment(date).date()
+  }
+}
 
 class GooglePhotos {
   addPhotoToAlbum(photoIdLst, albumId) {
@@ -22,17 +31,31 @@ class GooglePhotos {
     });
   };
 
-  getPhotos(nextPageToken) {
+  getPhotos(dateFilter, nextPageToken) {
     let params = {
       pageSize: 100
     };
     if (nextPageToken !== undefined) {
       params.pageToken = nextPageToken;
     }
+    if (dateFilter) {
+      const startDate = getGoogleDate(dateFilter.start);
+      const endDate = getGoogleDate(dateFilter.end);
+      params.filters = {
+        dateFilter: {
+          ranges: [
+            {
+              startDate: startDate,
+              endDate: endDate
+            }
+          ]
+        }
+      }
+    }
     const request = gapi.client.request({
-      'method': 'GET',
-      'path': 'https://photoslibrary.googleapis.com/v1/mediaItems',
-      params: params
+      'method': 'POST',
+      'path': 'https://photoslibrary.googleapis.com/v1/mediaItems:search',
+      'body': params
     });
     return request;
   }
