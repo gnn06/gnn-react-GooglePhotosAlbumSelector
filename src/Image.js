@@ -28,7 +28,6 @@ export default class Image extends React.Component {
                   <div className="flag" >
                     { this.props.albums && this.props.albums.map((item, index) => <div className="flag" key={index}>{item.title}</div>)}    
                   </div>
-                  <input type="checkbox" checked={this.state.isSelected} onChange={this.handleSelect}/>
                 </div>; 
     }
   }
