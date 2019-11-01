@@ -15,17 +15,11 @@ export default class ImageList extends React.Component {
       selected: new Set(),
       modalIsOpen: false
     };
-    this.startRequestPhotos = this.startRequestPhotos.bind(this);
     this.addAlbum           = this.addAlbum.bind(this);
     this.removeAlbum        = this.removeAlbum.bind(this);
     this.openModal          = this.openModal.bind(this);
     this.closeModal         = this.closeModal.bind(this);
     this.handleChooseAlbum  = this.handleChooseAlbum.bind(this);
-  }
-
-  startRequestPhotos() {
-    this.setState({nextPageToken: undefined});
-    this.request_photos();
   }
 
   request_photos() {
