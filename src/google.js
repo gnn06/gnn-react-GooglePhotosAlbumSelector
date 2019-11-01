@@ -40,7 +40,7 @@ class GooglePhotos {
     }
     if (dateFilter) {
       const startDate = getGoogleDate(dateFilter.start);
-      const endDate = getGoogleDate(dateFilter.end);
+      const endDate = getGoogleDate(moment(dateFilter.end).add(1, "day"));
       params.filters = {
         dateFilter: {
           ranges: [
