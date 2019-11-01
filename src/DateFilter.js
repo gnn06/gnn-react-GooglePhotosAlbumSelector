@@ -10,8 +10,8 @@ export default class DateFilter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate: this.props.dateFilter.startDate,
-            endDate: this.props.dateFilter.endDate
+            startDate: this.props.dateFilter.start,
+            endDate: this.props.dateFilter.end
         }
 
         this.setStartDate = this.setStartDate.bind(this);
