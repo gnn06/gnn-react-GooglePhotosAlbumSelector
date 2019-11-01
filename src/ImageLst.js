@@ -1,6 +1,5 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
-import ModalAlbum from './ModalAlbum.js';
 import Image from './Image.js';
 import GooglePhotos from './google.js';
 import * as AlbumUtil from "./album-utils.js";
@@ -93,25 +92,6 @@ export default class ImageList extends React.Component {
   render() {
     const loader = <div className="loader">Loading ...</div>;
     return <div className="photo-panel">
-      {this.state.selected.size}
-      <button onClick={this.openModal} disabled={this.state.selected.size === 0}>add to album</button>
-
-      <ModalAlbum
-        isOpen={this.state.modalIsOpen}
-        close={this.closeModal}
-        albums={this.props.albums}
-        handleChoose={this.handleChooseAlbum}/>
-
-      {/* <div className="grille">
-        {AlbumUtil.filterOneAlbum(this.state.photos, this.props.hideAlbum)
-          .map((item) =>
-            <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
-              id={item.id} key={item.id}
-              albums={item.albums}
-              addAlbum={this.addAlbum} removeAlbum={this.removeAlbum} />)}
-      </div>*/}
-      <button onClick={this.request_photos}>request photo</button>
-
       <InfiniteScroll className="grille" pageStart={0} loadMore={this.loadItems.bind(this)}
         hasMore={this.props.hasMoreItems}
         loader={loader}>
