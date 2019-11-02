@@ -1,25 +1,13 @@
-div.header-panel {
-  background-color: #dfdede;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-}
-
 div.album-list {
-  height: 700px;
-  overflow: scroll;
+  /* height: 700px;
+  overflow: scroll; */
 }
 div.album-panel {
-  width: 250px;
-  position: fixed;
-  top: 0px;
-  background-color: #cbcffb;
-  margin-top: 0px;
+  /* background-color: #cbcffb; */
 }
 
 div.photo-panel {
-  margin-left: 250px;
-  background-color: #d2b3ca;
+  /* background-color: #d2b3ca; */
 }
 
 div.grille {

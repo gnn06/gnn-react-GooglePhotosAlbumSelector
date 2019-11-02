@@ -109,22 +109,27 @@ class App extends React.Component {
 
   render () {
     return (
-      <div className="App">
-        { this.state.email }
-        <div className="album-panel">
-          <button onClick={this.signin}>sign in</button>
-          <button onClick={this.signout}>sign out</button>
-          <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
-          <AlbumLst parent={this} 
-            hideAlbumHandle={this.hideAlbumHandle}
-            showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
+      <div className="App container-fluid" >
+        <div className="row">
+          { this.state.email }
+          <div className="album-panel col-3">
+            <button onClick={this.signin}>sign in</button>
+            <button onClick={this.signout}>sign out</button>
+            <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
+            <AlbumLst parent={this} 
+              hideAlbumHandle={this.hideAlbumHandle}
+              showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
+          </div>
+          <div className="col-9">
+            <ImageList 
+              albums={this.state.albums} photos={this.state.photos}
+              hideAlbum={this.state.hideAlbums}
+              dateFilter={this.state.dateFilter}
+              nextPageToken={this.state.nextPageToken}
+              getPhotosHandler={this.getPhotosHandle}
+              hasMoreItems={this.state.hasMoreItems}/>
+          </div>
         </div>
-        <ImageList albums={this.state.albums} photos={this.state.photos}
-          hideAlbum={this.state.hideAlbums}
-          dateFilter={this.state.dateFilter}
-          nextPageToken={this.state.nextPageToken}
-          getPhotosHandler={this.getPhotosHandle}
-          hasMoreItems={this.state.hasMoreItems}/>
       </div>
     );
   }

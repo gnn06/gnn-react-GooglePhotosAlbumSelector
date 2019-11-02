@@ -91,7 +91,7 @@ export default class ImageList extends React.Component {
 
   render() {
     const loader = <div className="loader">Loading ...</div>;
-    return <div className="photo-panel">
+    return <div className="photo-panel ">
       <InfiniteScroll className="grille" pageStart={0} loadMore={this.loadItems.bind(this)}
         hasMore={this.props.hasMoreItems}
         loader={loader}>

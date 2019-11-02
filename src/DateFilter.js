@@ -33,17 +33,25 @@ export default class DateFilter extends React.Component {
 
     render() {
         return <div>
-            De <DatePicker 
-                    selected={this.state.endDate}
-                    onChange={date => this.setEndDate(date)}
-                    locale="fr"
-                    dateFormat="dd/MM/yyyy"/>
-            à <DatePicker
-                    selected={this.state.startDate}
-                    onChange={date => this.setStartDate(date)}
-                    locale="fr"
-                    dateFormat="dd/MM/yyyy"/> 
-            <button className="btn btn-primary" onClick={this.dateFilterSubmit}>filter</button>
+            <div className="row">
+                <label className="col-3 col-form-label">De :</label>
+                <DatePicker 
+                        className="form-control" 
+                        selected={this.state.endDate}
+                        onChange={date => this.setEndDate(date)}
+                        locale="fr"
+                        dateFormat="dd/MM/yyyy"/>
+            </div>
+            <div className="row">
+                <label className="col-3 col-form-label">A :</label>
+                <DatePicker
+                        className="form-control" 
+                        selected={this.state.startDate}
+                        onChange={date => this.setStartDate(date)}
+                        locale="fr"
+                        dateFormat="dd/MM/yyyy"/> 
+            </div>
+            <button className="btn btn-primary" onClick={this.dateFilterSubmit}>Appliquer dates</button>
         </div>;
     }
     
