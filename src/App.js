@@ -122,12 +122,14 @@ class App extends React.Component {
           </div>
           <div className="col-9">
             <ImageList 
-              albums={this.state.albums} photos={this.state.photos}
+              albums={this.state.albums}
+              photos={this.state.photos}
+              nextPageToken={this.state.nextPageToken}
+              hasMoreItems={this.state.hasMoreItems}
               hideAlbum={this.state.hideAlbums}
               dateFilter={this.state.dateFilter}
-              nextPageToken={this.state.nextPageToken}
               getPhotosHandler={this.getPhotosHandle}
-              hasMoreItems={this.state.hasMoreItems}/>
+              />
           </div>
         </div>
       </div>
