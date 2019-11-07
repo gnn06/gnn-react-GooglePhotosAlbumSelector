@@ -236,4 +236,35 @@ describe('getAlbumDetail', () => {
     });
 });
 
-
+test("getPhotos included end + 1 day", () => {
+    // GIVEN
+    const dateFilter = {
+        start:  new Date("2019-05-01T00:00:00Z"),
+        end:  new Date("2019-05-31T00:00:00Z")
+    }
+    global.gapi = {
+        client: {
+            request: jest.fn()
+        }
+    };
+    // THEN
+    Google.getPhotos(dateFilter);
+    console.log(global.gapi.client.request.mock.calls[0][0].body.filters);
+    expect(global.gapi.client.request.mock.calls[0][0].body.filters).toEqual({
+        dateFilter: {
+            ranges: [
+            {
+            startDate: {
+                day: 1,
+                month: 5,
+                year: 2019  
+            },
+             endDate: {
+                day: 1,
+                month: 6,
+                year: 2019  
+            }
+            }
+            ]
+        }});
+});
