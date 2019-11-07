@@ -19,7 +19,7 @@ class App extends React.Component {
       showOnlyAlbums: [],
       dateFilter: {
         start: moment().startOf('month').toDate(),
-        end: new Date()
+        end: moment().endOf('month').toDate()
       },
       nextPageToken: undefined,
       hasMoreItems: false
