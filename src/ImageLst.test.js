@@ -3,7 +3,7 @@ import { shallow, mount, render } from 'enzyme';
 import ImageLst from './ImageLst.js';
 import expectExport from 'expect';
 
-it.only('ImageLst', () => {
+it('ImageLst', () => {
     // GIVEN
     const albums = [];
     const photos = [

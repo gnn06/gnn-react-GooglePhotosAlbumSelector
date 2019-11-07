@@ -22,7 +22,7 @@ class App extends React.Component {
         end: moment().endOf('month').toDate()
       },
       nextPageToken: undefined,
-      hasMoreItems: false
+      hasMoreItems: true // need to be true to made initial load even if gapi is not loaded
     };
 
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
