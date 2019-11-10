@@ -3,7 +3,6 @@ import React from 'react';
 
 // services
 import GooglePhotos from './google.js';
-import * as Store from './services/store.js';
 
 import Album from './Album.js';
 
@@ -14,20 +13,13 @@ export default class AlbumLst extends React.Component {
     this.state = {
       selectedAlbum: [],
       error: false,
-      running: false,
-      previousAlbums: []
+      running: false
     }
     this.request_albums = this.request_albums.bind(this);
-    this.store_albums = this.store_albums.bind(this);
-    this.restore_albums = this.restore_albums.bind(this);
     this.request_allAlbumPhotos = this.request_allAlbumPhotos.bind(this);
     this.selectAlbumHandle = this.selectAlbumHandle.bind(this);
     this.hideAlbum = this.hideAlbum.bind(this);
     this.showOnlyAlbum = this.showOnlyAlbum.bind(this);
-  }
-
-  componentDidMount() {
-    this.restore_albums();
   }
 
   request_albums() {
@@ -40,7 +32,7 @@ export default class AlbumLst extends React.Component {
 
   request_allAlbumPhotos() {
     const albums = this.props.albums;
-    const previousAlbums = this.state.previousAlbums;
+    const previousAlbums = this.props.previousAlbums;
     var component = this;
     component.setState({error: false, running: true});
     GooglePhotos.getAllAlbumDetail(albums, (album) => {
@@ -55,19 +47,6 @@ export default class AlbumLst extends React.Component {
     }, previousAlbums).finally(function() {
       component.setState({ running: false });
     });
-  }
-
-  store_albums() {
-    localStorage.setItem('albums', JSON.stringify(this.props.albums));
-  }
-
-  restore_albums() {
-    var albums = Store.getAlbums();
-    if (albums == null) {
-      albums= [];
-    }
-    this.props.setAlbums(albums);
-    this.setState({previousAlbums: albums});
   }
 
   selectAlbumHandle(albumId, selected) {

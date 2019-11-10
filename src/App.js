@@ -5,6 +5,7 @@ import AlbumLst from './AlbumLst.js';
 import ImageList from './ImageLst.js';
 import DateFilter from './DateFilter.js';
 import moment from 'moment';
+import * as Store from './services/store.js';
 
 var GoogleAuth; // Google Auth object.
 
@@ -22,7 +23,8 @@ class App extends React.Component {
         end: moment().endOf('month').toDate()
       },
       nextPageToken: undefined,
-      hasMoreItems: true // need to be true to made initial load even if gapi is not loaded
+      hasMoreItems: true, // need to be true to made initial load even if gapi is not loaded
+      previousAlbums: []
     };
 
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
@@ -33,8 +35,14 @@ class App extends React.Component {
     this.dateFilterHandle = this.dateFilterHandle.bind(this);
     this.getPhotosHandle = this.getPhotosHandle.bind(this);
     this.setAlbums = this.setAlbums.bind(this);
+    this.store_albums = this.store_albums.bind(this);
+    this.restore_albums = this.restore_albums.bind(this);
 
     gapi.load('client', this.start);
+  }
+
+  componentDidMount() {
+    this.restore_albums();
   }
 
   start() {
@@ -112,6 +120,18 @@ class App extends React.Component {
     this.setState({albums: albums});
   }
 
+  store_albums() {
+    localStorage.setItem('albums', JSON.stringify(this.props.albums));
+  }
+
+  restore_albums() {
+    var albums = Store.getAlbums();
+    if (albums == null) {
+      albums= [];
+    }
+    this.setState({albums: albums, previousAlbums: albums});
+  }
+
   render () {
     return (
       <div className="App container-fluid" >
@@ -123,8 +143,8 @@ class App extends React.Component {
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
             <AlbumLst
               albums={this.state.albums}
+              previousAlbums={this.state.previousAlbums}
               setAlbums={this.setAlbums}
-              resetAlbums={this.resetAlbums}
               hideAlbumHandle={this.hideAlbumHandle}
               showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
           </div>
