@@ -1,6 +1,10 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
+
+// services
 import GooglePhotos from './google.js';
+import * as Store from './services/store.js';
+
 import Album from './Album.js';
 
 export default class AlbumLst extends React.Component {
@@ -20,6 +24,10 @@ export default class AlbumLst extends React.Component {
     this.selectAlbumHandle = this.selectAlbumHandle.bind(this);
     this.hideAlbum = this.hideAlbum.bind(this);
     this.showOnlyAlbum = this.showOnlyAlbum.bind(this);
+  }
+
+  componentDidMount() {
+    this.restore_albums();
   }
 
   request_albums() {
@@ -54,7 +62,7 @@ export default class AlbumLst extends React.Component {
   }
 
   restore_albums() {
-    var albums = JSON.parse(localStorage.getItem('albums'));
+    var albums = Store.getAlbums();
     this.props.parent.setState({ albums: albums });
     this.setState({previousAlbums: albums});
   }
