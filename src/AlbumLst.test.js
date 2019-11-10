@@ -23,7 +23,7 @@ it('AlbumLst, check running div', async () => {
         },
         setState: jest.fn()
     };
-    const mockRestoreAlbumsHandle = jest.fn();
+    const mockSetAlbums = jest.fn();
 
     GooglePhotos.getAllAlbumDetail = jest.fn(() => {
             expect(wrapper.find("div#running")).toHaveLength(1);
@@ -31,7 +31,7 @@ it('AlbumLst, check running div', async () => {
         });
     const wrapper = shallow(<AlbumLst parent={mockParent}
         albums={albums}
-        restoreAlbumsHandle={mockRestoreAlbumsHandle}/>);
+        setAlbums={mockSetAlbums}/>);
     
     expect(wrapper.find("div#running")).toHaveLength(0);
     
@@ -42,4 +42,35 @@ it('AlbumLst, check running div', async () => {
     await Promise.resolve();
     // THEN
     expect(wrapper.find("div#running")).toHaveLength(0);
+});
+
+describe('restore albums', () => {
+
+    it('restore 1 album', () => {
+        // GIVEN
+        var albums = [];
+        const restoredAlbums = [{id:"albumid1"}];
+        const mockSetAlbums = jest.fn();
+        Store.getAlbums = jest.fn().mockReturnValue(restoredAlbums);
+        // WHEN
+        const wrapper = shallow(<AlbumLst 
+            albums={albums}
+            setAlbums={mockSetAlbums}/>);
+        // THEN
+        expect(mockSetAlbums).toHaveBeenCalledWith(restoredAlbums);
+    });
+    
+    it('restore 0 album', () => {
+        // GIVEN
+        var albums = [];
+        const mockSetAlbums = jest.fn();
+        Store.getAlbums = jest.fn().mockReturnValue(null);
+        // WHEN
+        const wrapper = shallow(<AlbumLst 
+            albums={albums}
+            setAlbums={mockSetAlbums}/>);
+        // THEN
+        expect(mockSetAlbums).toHaveBeenCalledWith([]);
+    });
+    
 });

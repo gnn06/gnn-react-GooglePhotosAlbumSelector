@@ -32,6 +32,7 @@ class App extends React.Component {
     this.showOnlyAlbumHandle = this.showOnlyAlbumHandle.bind(this);
     this.dateFilterHandle = this.dateFilterHandle.bind(this);
     this.getPhotosHandle = this.getPhotosHandle.bind(this);
+    this.setAlbums = this.setAlbums.bind(this);
 
     gapi.load('client', this.start);
   }
@@ -107,6 +108,10 @@ class App extends React.Component {
     this.setState({photos: photos, nextPageToken: nextPageToken, hasMoreItems: nextPageToken !== undefined});
   }
 
+  setAlbums(albums) {
+    this.setState({albums: albums});
+  }
+
   render () {
     return (
       <div className="App container-fluid" >
@@ -116,7 +121,10 @@ class App extends React.Component {
             <button onClick={this.signin}>sign in</button>
             <button onClick={this.signout}>sign out</button>
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
-            <AlbumLst parent={this} 
+            <AlbumLst
+              albums={this.state.albums}
+              setAlbums={this.setAlbums}
+              resetAlbums={this.resetAlbums}
               hideAlbumHandle={this.hideAlbumHandle}
               showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
           </div>

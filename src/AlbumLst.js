@@ -32,24 +32,24 @@ export default class AlbumLst extends React.Component {
 
   request_albums() {
     var component = this;
-    component.props.parent.setState({ albums: [] });
+    this.props.setAlbums([]);
     GooglePhotos.getAlbums(null, albums => {
-      component.props.parent.setState({ albums: component.props.parent.state.albums.concat(albums) });
+      component.props.setAlbums(this.props.albums.concat(albums));
     });
   }
 
   request_allAlbumPhotos() {
-    const albums = this.props.parent.state.albums;
+    const albums = this.props.albums;
     const previousAlbums = this.state.previousAlbums;
     var component = this;
     component.setState({error: false, running: true});
     GooglePhotos.getAllAlbumDetail(albums, (album) => {
-      let albums = component.props.parent.state.albums;
+      let albums = component.props.albums;
       const index = albums.findIndex(al => al.id === album.id);
       if (index > -1) {
         albums[index] = album;
       }
-      component.props.parent.setState({ albums: albums });
+      component.props.setAlbums(albums);
     }, error => {
       component.setState({error: true});
     }, previousAlbums).finally(function() {
@@ -58,7 +58,7 @@ export default class AlbumLst extends React.Component {
   }
 
   store_albums() {
-    localStorage.setItem('albums', JSON.stringify(this.props.parent.state.albums));
+    localStorage.setItem('albums', JSON.stringify(this.props.albums));
   }
 
   restore_albums() {
@@ -66,7 +66,7 @@ export default class AlbumLst extends React.Component {
     if (albums == null) {
       albums= [];
     }
-    this.props.parent.setState({ albums: albums });
+    this.props.setAlbums(albums);
     this.setState({previousAlbums: albums});
   }
 
@@ -103,7 +103,7 @@ export default class AlbumLst extends React.Component {
       <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>
       { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
       { this.state.running ? (<div id="running" className="rounded bg-warning m-1 p-1">Running</div>) : null }
-      <div className="album-list">{this.props.parent.state.albums.map((item) => 
+      <div className="album-list">{this.props.albums.map((item) => 
         <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
         )}
       </div>
