@@ -77,7 +77,6 @@ export default class AlbumLst extends React.Component {
       <button className="btn btn-primary" onClick={this.request_albums}>request albums</button>
       <button className="btn btn-primary" id="request-all-album-photos" onClick={this.request_allAlbumPhotos}>request album phptos</button>
       <button className="btn btn-primary" onClick={this.store_albums}>store albums</button>
-      <button className="btn btn-primary" onClick={this.restore_albums}>restore albums</button>
       <button className="btn btn-primary" onClick={this.hideAlbum}>hide album</button>
       <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>
       { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
