@@ -1,6 +1,9 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
 import './App.css';
+// services
+import GooglePhotos from './google.js';
+
 import AlbumLst from './AlbumLst.js';
 import ImageList from './ImageLst.js';
 import DateFilter from './DateFilter.js';
@@ -24,7 +27,9 @@ class App extends React.Component {
       },
       nextPageToken: undefined,
       hasMoreItems: true, // need to be true to made initial load even if gapi is not loaded
-      previousAlbums: []
+      previousAlbums: [],
+      error: false,
+      running: false
     };
 
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
@@ -37,6 +42,8 @@ class App extends React.Component {
     this.setAlbums = this.setAlbums.bind(this);
     this.store_albums = this.store_albums.bind(this);
     this.restore_albums = this.restore_albums.bind(this);
+    this.requestAlbumsHandle = this.requestAlbumsHandle.bind(this);
+    this.requestAlbumsPhotosHandle = this.requestAlbumsPhotosHandle.bind(this);
 
     gapi.load('client', this.start);
   }
@@ -132,6 +139,33 @@ class App extends React.Component {
     this.setState({albums: albums, previousAlbums: albums});
   }
 
+  requestAlbumsHandle() {
+    var component = this;
+    this.setState({albums: []});
+    GooglePhotos.getAlbums(null, albums => {
+      component.setState({albums: this.state.albums.concat(albums)});
+    });
+  }
+
+  requestAlbumsPhotosHandle() {
+    const albums = this.state.albums;
+    const previousAlbums = this.state.previousAlbums;
+    var component = this;
+    this.setState({error: false, running: true});
+    GooglePhotos.getAllAlbumDetail(albums, (album) => {
+      let albums = component.state.albums;
+      const index = albums.findIndex(al => al.id === album.id);
+      if (index > -1) {
+        albums[index] = album;
+      }
+      component.setState({albums: albums});
+    }, error => {
+      component.setState({error: true});
+    }, previousAlbums).finally(function() {
+      component.setState({ running: false });
+    });
+  }
+
   render () {
     return (
       <div className="App container-fluid" >
@@ -141,12 +175,16 @@ class App extends React.Component {
             <button onClick={this.signin}>sign in</button>
             <button onClick={this.signout}>sign out</button>
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
+            { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
+            { this.state.running ? (<div id="running" className="rounded bg-warning m-1 p-1">Running</div>) : null }
             <AlbumLst
               albums={this.state.albums}
               previousAlbums={this.state.previousAlbums}
               setAlbums={this.setAlbums}
               hideAlbumHandle={this.hideAlbumHandle}
-              showOnlyAlbumHandle={this.showOnlyAlbumHandle}/>
+              showOnlyAlbumHandle={this.showOnlyAlbumHandle}
+              requestAlbumsHandle={this.requestAlbumsHandle}
+              requestAlbumsPhotosHandle={this.requestAlbumsPhotosHandle}/>
           </div>
           <div className="col-9">
             <ImageList 

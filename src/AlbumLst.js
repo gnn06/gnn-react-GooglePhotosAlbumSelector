@@ -11,42 +11,21 @@ export default class AlbumLst extends React.Component {
   constructor() {
     super();
     this.state = {
-      selectedAlbum: [],
-      error: false,
-      running: false
+      selectedAlbum: []
     }
-    this.request_albums = this.request_albums.bind(this);
-    this.request_allAlbumPhotos = this.request_allAlbumPhotos.bind(this);
+    this.requestAlbumsClick = this.requestAlbumsClick.bind(this);
+    this.requestAlbumsPhotosClick = this.requestAlbumsPhotosClick.bind(this);
     this.selectAlbumHandle = this.selectAlbumHandle.bind(this);
     this.hideAlbum = this.hideAlbum.bind(this);
     this.showOnlyAlbum = this.showOnlyAlbum.bind(this);
   }
 
-  request_albums() {
-    var component = this;
-    this.props.setAlbums([]);
-    GooglePhotos.getAlbums(null, albums => {
-      component.props.setAlbums(this.props.albums.concat(albums));
-    });
+  requestAlbumsClick() {
+    this.props.requestAlbumsHandle();
   }
 
-  request_allAlbumPhotos() {
-    const albums = this.props.albums;
-    const previousAlbums = this.props.previousAlbums;
-    var component = this;
-    component.setState({error: false, running: true});
-    GooglePhotos.getAllAlbumDetail(albums, (album) => {
-      let albums = component.props.albums;
-      const index = albums.findIndex(al => al.id === album.id);
-      if (index > -1) {
-        albums[index] = album;
-      }
-      component.props.setAlbums(albums);
-    }, error => {
-      component.setState({error: true});
-    }, previousAlbums).finally(function() {
-      component.setState({ running: false });
-    });
+  requestAlbumsPhotosClick() {
+    this.props.requestAlbumsPhotosHandle();
   }
 
   selectAlbumHandle(albumId, selected) {
@@ -74,13 +53,11 @@ export default class AlbumLst extends React.Component {
 
   render() {
     return <div>
-      <button className="btn btn-primary" onClick={this.request_albums}>request albums</button>
-      <button className="btn btn-primary" id="request-all-album-photos" onClick={this.request_allAlbumPhotos}>request album phptos</button>
+      <button className="btn btn-primary" onClick={this.requestAlbumsClick}>request albums</button>
+      <button className="btn btn-primary" id="request-all-album-photos" onClick={this.requestAlbumsPhotosClick}>request album phptos</button>
       <button className="btn btn-primary" onClick={this.store_albums}>store albums</button>
       <button className="btn btn-primary" onClick={this.hideAlbum}>hide album</button>
       <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>
-      { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
-      { this.state.running ? (<div id="running" className="rounded bg-warning m-1 p-1">Running</div>) : null }
       <div className="album-list">{this.props.albums.map((item) => 
         <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
         )}
