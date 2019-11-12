@@ -268,3 +268,19 @@ test("getPhotos included end + 1 day", () => {
             ]
         }});
 });
+
+test('getAlbums', () => {
+    const mockCallbackUI = jest.fn();
+    global.gapi = {
+        client: {
+            request: jest.fn()
+            .mockResolvedValueOnce({result: { albums: [{id:"id1"}], nextPageToken: "next"} })
+            .mockResolvedValueOnce({result: { albums: [{id:"id2"}]} })
+        },
+        load: jest.fn()
+      };
+    return Google.getAlbums(null, mockCallbackUI)
+    .then(() => {
+        expect(mockCallbackUI).toHaveBeenCalledTimes(2);
+    });
+})

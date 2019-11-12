@@ -10,36 +10,6 @@ import GooglePhotos from './google.js';
 import AlbumLst from './AlbumLst.js';
 
 it('AlbumLst, check running div', async () => {
-    // GIVEN
-    const albums = [{
-        title:"title album1",
-        id:"albumid1",
-        mediaItemsCount: 1
-    }];
-    const mockParent = {
-        state: {
-            albums: albums
-        },
-        setState: jest.fn()
-    };
-    const mockSetAlbums = jest.fn();
-
-    GooglePhotos.getAllAlbumDetail = jest.fn(() => {
-            expect(wrapper.find("div#running")).toHaveLength(1);
-            return Promise.resolve();
-        });
-    const wrapper = shallow(<AlbumLst parent={mockParent}
-        albums={albums}
-        setAlbums={mockSetAlbums}/>);
     
-    expect(wrapper.find("div#running")).toHaveLength(0);
-    
-    //WHEN
-    wrapper.find("button#request-all-album-photos").simulate('click');    
-    
-    // necessary to wait the finally that change state
-    await Promise.resolve();
-    // THEN
-    expect(wrapper.find("div#running")).toHaveLength(0);
 });
 

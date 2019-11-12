@@ -13,15 +13,14 @@ export default class AlbumLst extends React.Component {
     this.state = {
       selectedAlbum: []
     }
-    this.requestAlbumsClick = this.requestAlbumsClick.bind(this);
-    this.requestAlbumsPhotosClick = this.requestAlbumsPhotosClick.bind(this);
+    this.requestAlbumsDetailsClick = this.requestAlbumsDetailsClick.bind(this);
     this.selectAlbumHandle = this.selectAlbumHandle.bind(this);
     this.hideAlbum = this.hideAlbum.bind(this);
     this.showOnlyAlbum = this.showOnlyAlbum.bind(this);
   }
 
-  requestAlbumsClick() {
-    this.props.requestAlbumsHandle();
+  requestAlbumsDetailsClick() {
+    this.props.requestAlbumsDetailsHandle();
   }
 
   requestAlbumsPhotosClick() {
@@ -53,8 +52,7 @@ export default class AlbumLst extends React.Component {
 
   render() {
     return <div>
-      <button className="btn btn-primary" onClick={this.requestAlbumsClick}>request albums</button>
-      <button className="btn btn-primary" id="request-all-album-photos" onClick={this.requestAlbumsPhotosClick}>request album phptos</button>
+      <button className="btn btn-primary" onClick={this.requestAlbumsDetailsClick}>request albums details</button>
       <button className="btn btn-primary" onClick={this.store_albums}>store albums</button>
       <button className="btn btn-primary" onClick={this.hideAlbum}>hide album</button>
       <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>

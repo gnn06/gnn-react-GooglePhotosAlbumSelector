@@ -66,7 +66,7 @@ class GooglePhotos {
     if (nextPageToken !== undefined && typeof nextPageToken == "string") {
       params.pageToken = nextPageToken;
     }
-    gapi.client.request({
+    return gapi.client.request({
       'method': 'GET',
       'path': 'https://photoslibrary.googleapis.com/v1/albums',
       params: params
@@ -76,7 +76,7 @@ class GooglePhotos {
       });
       handleGetAlbums(response.result.albums);
       if (response.result.nextPageToken !== undefined) {
-        that.getAlbums(response.result.nextPageToken, handleGetAlbums);
+        return that.getAlbums(response.result.nextPageToken, handleGetAlbums);
       }
     }, function (error) {
       console.error(error);

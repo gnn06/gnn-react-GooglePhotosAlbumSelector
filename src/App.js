@@ -42,8 +42,7 @@ class App extends React.Component {
     this.setAlbums = this.setAlbums.bind(this);
     this.store_albums = this.store_albums.bind(this);
     this.restore_albums = this.restore_albums.bind(this);
-    this.requestAlbumsHandle = this.requestAlbumsHandle.bind(this);
-    this.requestAlbumsPhotosHandle = this.requestAlbumsPhotosHandle.bind(this);
+    this.requestAlbumsDetailsHandle = this.requestAlbumsDetailsHandle.bind(this);
 
     gapi.load('client', this.start);
   }
@@ -139,12 +138,19 @@ class App extends React.Component {
     this.setState({albums: albums, previousAlbums: albums});
   }
 
+  requestAlbumsDetailsHandle() {
+    this.requestAlbumsHandle()
+    .then(() => {
+      this.requestAlbumsPhotosHandle();
+    })
+  }
+
   requestAlbumsHandle() {
     var component = this;
     this.setState({albums: []});
-    GooglePhotos.getAlbums(null, albums => {
-      component.setState({albums: this.state.albums.concat(albums)});
-    });
+    return GooglePhotos.getAlbums(null, albums => {
+        component.setState({albums: this.state.albums.concat(albums)});
+      });
   }
 
   requestAlbumsPhotosHandle() {
@@ -152,7 +158,7 @@ class App extends React.Component {
     const previousAlbums = this.state.previousAlbums;
     var component = this;
     this.setState({error: false, running: true});
-    GooglePhotos.getAllAlbumDetail(albums, (album) => {
+    return GooglePhotos.getAllAlbumDetail(albums, (album) => {
       let albums = component.state.albums;
       const index = albums.findIndex(al => al.id === album.id);
       if (index > -1) {
@@ -183,8 +189,7 @@ class App extends React.Component {
               setAlbums={this.setAlbums}
               hideAlbumHandle={this.hideAlbumHandle}
               showOnlyAlbumHandle={this.showOnlyAlbumHandle}
-              requestAlbumsHandle={this.requestAlbumsHandle}
-              requestAlbumsPhotosHandle={this.requestAlbumsPhotosHandle}/>
+              requestAlbumsDetailsHandle={this.requestAlbumsDetailsHandle}/>
           </div>
           <div className="col-9">
             <ImageList 
