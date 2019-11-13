@@ -39,12 +39,37 @@ describe('restore albums', () => {
   
 });
 
-test('App functions', () => {
+test('request albums and details', () => {
   Google.getAlbums = jest.fn().mockResolvedValue([{id:"albumid1"}]);
   Google.getAllAlbumDetail = jest.fn().mockResolvedValue([{id:"photoid1"}]);
   const wrapper = shallow(<App/>);
   const instance = wrapper.instance();
   instance.requestAlbumsDetailsHandle();
+});
+
+describe('requestAlbumsAndDetails, check reset albums list', () => {
+  test('error => no reset', () => {
+    const wrapper = shallow(<App/>);
+    const instance = wrapper.instance();
+    wrapper.setState({albums: [{id:"albumid1"}], error: true});
+    instance.requestAlbumsHandle = jest.fn();
+    instance.requestAlbumsPhotosHandle = jest.fn();
+    instance.requestAlbumsDetailsHandle();
+    // THEN
+    expect(instance.requestAlbumsHandle).not.toHaveBeenCalled();
+  });
+  
+  test('no error => reset', () => {
+    const wrapper = shallow(<App/>);
+    const instance = wrapper.instance();
+    wrapper.setState({albums: [{id:"albumid1"}], error: false});
+    instance.requestAlbumsHandle = jest.fn().mockResolvedValue();
+    instance.requestAlbumsPhotosHandle = jest.fn();
+    instance.requestAlbumsDetailsHandle();
+    // THEN
+    expect(instance.requestAlbumsHandle).toHaveBeenCalled();
+  });
+  
 });
 
 /*it('AlbumLst, check running div', async () => {

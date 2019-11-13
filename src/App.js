@@ -139,10 +139,14 @@ class App extends React.Component {
   }
 
   requestAlbumsDetailsHandle() {
-    this.requestAlbumsHandle()
-    .then(() => {
-      this.requestAlbumsPhotosHandle();
-    })
+    if (this.state.error) {
+      return this.requestAlbumsPhotosHandle();
+    } else {
+      return this.requestAlbumsHandle()
+      .then(() => {
+        this.requestAlbumsPhotosHandle();
+      })
+    }
   }
 
   requestAlbumsHandle() {
