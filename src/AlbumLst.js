@@ -2,7 +2,6 @@
 import React from 'react';
 
 // services
-import GooglePhotos from './google.js';
 
 import Album from './Album.js';
 
