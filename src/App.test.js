@@ -52,8 +52,9 @@ describe('requestAlbumsAndDetails, check reset albums list', () => {
     const wrapper = shallow(<App/>);
     const instance = wrapper.instance();
     wrapper.setState({albums: [{id:"albumid1"}], error: true});
-    instance.requestAlbumsHandle = jest.fn();
-    instance.requestAlbumsPhotosHandle = jest.fn();
+    instance.requestAlbumsHandle = jest.fn().mockResolvedValue();
+    instance.requestAlbumsPhotosHandle = jest.fn().mockResolvedValue();
+    instance.store_albums = jest.fn();
     instance.requestAlbumsDetailsHandle();
     // THEN
     expect(instance.requestAlbumsHandle).not.toHaveBeenCalled();
@@ -65,9 +66,27 @@ describe('requestAlbumsAndDetails, check reset albums list', () => {
     wrapper.setState({albums: [{id:"albumid1"}], error: false});
     instance.requestAlbumsHandle = jest.fn().mockResolvedValue();
     instance.requestAlbumsPhotosHandle = jest.fn();
-    instance.requestAlbumsDetailsHandle();
-    // THEN
-    expect(instance.requestAlbumsHandle).toHaveBeenCalled();
+    instance.store_albums = jest.fn();
+    return instance.requestAlbumsDetailsHandle()
+      .then(() => {
+        // THEN
+        expect(instance.requestAlbumsHandle).toHaveBeenCalled();
+        expect(instance.store_albums).toHaveBeenCalled();
+      });
+  });
+
+  test('if error then don"t store', () => {
+    const wrapper = shallow(<App/>);
+    const instance = wrapper.instance();
+    wrapper.setState({albums: [{id:"albumid1"}], error: false});
+    instance.requestAlbumsHandle = jest.fn().mockResolvedValue();
+    instance.requestAlbumsPhotosHandle = jest.fn().mockImplementationOnce(() => { wrapper.setState({error: true}); return Promise.resolve()});
+    instance.store_albums = jest.fn();
+    return instance.requestAlbumsDetailsHandle()
+      .then(() => {
+        // THEN
+        expect(instance.store_albums).not.toHaveBeenCalled();
+      });
   });
   
 });

@@ -40,8 +40,6 @@ class App extends React.Component {
     this.dateFilterHandle = this.dateFilterHandle.bind(this);
     this.getPhotosHandle = this.getPhotosHandle.bind(this);
     this.setAlbums = this.setAlbums.bind(this);
-    this.store_albums = this.store_albums.bind(this);
-    this.restore_albums = this.restore_albums.bind(this);
     this.requestAlbumsDetailsHandle = this.requestAlbumsDetailsHandle.bind(this);
 
     gapi.load('client', this.start);
@@ -127,7 +125,7 @@ class App extends React.Component {
   }
 
   store_albums() {
-    localStorage.setItem('albums', JSON.stringify(this.props.albums));
+    Store.setAlbums(this.state.albums);
   }
 
   restore_albums() {
@@ -139,14 +137,21 @@ class App extends React.Component {
   }
 
   requestAlbumsDetailsHandle() {
+    var p;
     if (this.state.error) {
-      return this.requestAlbumsPhotosHandle();
+      p = this.requestAlbumsPhotosHandle();
     } else {
-      return this.requestAlbumsHandle()
+      p = this.requestAlbumsHandle()
       .then(() => {
-        this.requestAlbumsPhotosHandle();
-      })
+        return this.requestAlbumsPhotosHandle();
+      });
     }
+    p.then(() => {
+      if (!this.state.error) {
+        this.store_albums();
+      }
+    });
+    return p;
   }
 
   requestAlbumsHandle() {
