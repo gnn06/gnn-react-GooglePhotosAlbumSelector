@@ -84,7 +84,7 @@ class App extends React.Component {
 
   setSigninStatus() {
     var user = GoogleAuth.currentUser.get();
-    var isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/photoslibrary');
+    var isAuthorized = user.hasGrantedScopes('https://www.googleapis.com/auth/photoslibrary.readonly');
     if (isAuthorized) {
       console.log('authorized');
       const profile = user.getBasicProfile();
@@ -185,8 +185,8 @@ class App extends React.Component {
     return (
       <div className="App container-fluid" >
         <div className="row">
-          { this.state.email }
           <div className="album-panel col-3">
+            <div>{ this.state.email }</div>
             <button onClick={this.signin}>sign in</button>
             <button onClick={this.signout}>sign out</button>
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
