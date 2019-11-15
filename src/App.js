@@ -1,14 +1,16 @@
 /* eslint no-undef: "off"*/
 import React from 'react';
 import './App.css';
+import moment from 'moment';
+
 // services
 import GooglePhotos from './google.js';
 
 import AlbumLst from './AlbumLst.js';
 import ImageList from './ImageLst.js';
 import DateFilter from './DateFilter.js';
-import moment from 'moment';
 import * as Store from './services/store.js';
+import * as AlbumUtil from "./album-utils.js";
 
 var GoogleAuth; // Google Auth object.
 
@@ -38,9 +40,9 @@ class App extends React.Component {
     this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
     this.showOnlyAlbumHandle = this.showOnlyAlbumHandle.bind(this);
     this.dateFilterHandle = this.dateFilterHandle.bind(this);
-    this.getPhotosHandle = this.getPhotosHandle.bind(this);
     this.setAlbums = this.setAlbums.bind(this);
     this.requestAlbumsDetailsHandle = this.requestAlbumsDetailsHandle.bind(this);
+    this.requestPhotosHandle = this.requestPhotosHandle.bind(this);
 
     gapi.load('client', this.start);
   }
@@ -181,6 +183,25 @@ class App extends React.Component {
     });
   }
 
+  requestPhotosHandle() {
+    var component = this;
+    const nextPageToken = this.state.nextPageToken;
+
+    GooglePhotos.getPhotos(this.state.dateFilter, nextPageToken)
+    .then(function(response) {
+      const statePhotoList = component.state.photos;
+      const newPhotoList = statePhotoList.concat(response.result.mediaItems.map(
+        photo => {
+          photo.albums = AlbumUtil.getAlbumsPhoto(photo.id, component.state.albums);
+          return photo;
+        }
+      ));
+      component.getPhotosHandle(newPhotoList, response.result.nextPageToken);
+    }, function(error) {
+      console.error(error);
+    });
+  }
+
   render () {
     return (
       <div className="App container-fluid" >
@@ -208,7 +229,7 @@ class App extends React.Component {
               hasMoreItems={this.state.hasMoreItems}
               hideAlbum={this.state.hideAlbums}
               dateFilter={this.state.dateFilter}
-              getPhotosHandler={this.getPhotosHandle}
+              requestPhotosHandle={this.requestPhotosHandle}
               />
           </div>
         </div>

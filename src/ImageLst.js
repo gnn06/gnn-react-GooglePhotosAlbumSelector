@@ -21,28 +21,9 @@ export default class ImageList extends React.Component {
     this.handleChooseAlbum  = this.handleChooseAlbum.bind(this);
   }
 
-  request_photos() {
-    var component = this;
-    const nextPageToken = this.props.nextPageToken;
-
-    GooglePhotos.getPhotos(this.props.dateFilter, nextPageToken)
-      .then(function(response) {
-        const statePhotoList = component.props.photos;
-        const newPhotoList = statePhotoList.concat(response.result.mediaItems.map(
-          photo => {
-            photo.albums = AlbumUtil.getAlbumsPhoto(photo.id, component.props.albums);
-            return photo;
-          }
-        ));
-        component.props.getPhotosHandler(newPhotoList, response.result.nextPageToken);
-      }, function(error) {
-        console.error(error);
-      });
-  }
-
   loadItems(page) {
     if (gapi.client !== undefined) {
-      this.request_photos();
+      this.props.requestPhotosHandle();
     };
   }
 
