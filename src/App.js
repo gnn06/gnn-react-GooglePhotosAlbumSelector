@@ -190,13 +190,18 @@ class App extends React.Component {
     GooglePhotos.getPhotos(this.state.dateFilter, nextPageToken)
     .then(function(response) {
       const statePhotoList = component.state.photos;
-      const newPhotoList = statePhotoList.concat(response.result.mediaItems.map(
-        photo => {
-          photo.albums = AlbumUtil.getAlbumsPhoto(photo.id, component.state.albums);
-          return photo;
-        }
-      ));
-      component.getPhotosHandle(newPhotoList, response.result.nextPageToken);
+      var newPhotoList = statePhotoList;
+      var newNextPageToken = undefined;
+      if (response.result.mediaItems) {
+        newPhotoList = statePhotoList.concat(response.result.mediaItems.map(
+          photo => {
+            photo.albums = AlbumUtil.getAlbumsPhoto(photo.id, component.state.albums);
+            return photo;
+          }
+        ));
+        newNextPageToken = response.result.nextPageToken;
+      }
+      component.getPhotosHandle(newPhotoList, newNextPageToken);
     }, function(error) {
       console.error(error);
     });
