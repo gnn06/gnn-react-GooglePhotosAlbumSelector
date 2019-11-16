@@ -187,7 +187,7 @@ class App extends React.Component {
     var component = this;
     const nextPageToken = this.state.nextPageToken;
 
-    GooglePhotos.getPhotos(this.state.dateFilter, nextPageToken)
+    return GooglePhotos.getPhotos(this.state.dateFilter, nextPageToken)
     .then(function(response) {
       const statePhotoList = component.state.photos;
       var newPhotoList = statePhotoList;

@@ -91,6 +91,48 @@ describe('requestAlbumsAndDetails, check reset albums list', () => {
   
 });
 
+test('requestPhotosHandle, setting hasMore, finally false', () => {
+  // necessary to avoid let 'Loading....'
+  const wrapper = shallow(<App/>);
+  const instance = wrapper.instance();
+  
+  // GIVEN
+  Google.getPhotos = jest.fn().mockResolvedValue({
+    result: {
+      mediaItems: null,
+      nextPageToken: undefined
+    }
+  });
+
+  // WHEN
+  return instance.requestPhotosHandle()
+  .then(() => {
+    // THEN
+    expect(wrapper.state().hasMoreItems).toEqual(false);
+  });
+});
+
+test('requestPhotosHandle, setting hasMore, true during process', () => {
+  // necessary to avoid let 'Loading....'
+  const wrapper = shallow(<App/>);
+  const instance = wrapper.instance();
+  
+  // GIVEN
+  Google.getPhotos = jest.fn().mockResolvedValue({
+    result: {
+      mediaItems: [{id:"photoid1"}],
+      nextPageToken: "aze"
+    }
+  });
+
+  // WHEN
+  return instance.requestPhotosHandle()
+  .then(() => {
+    // THEN
+    expect(wrapper.state().hasMoreItems).toEqual(true);
+  });
+});
+
 /*it('AlbumLst, check running div', async () => {
   // GIVEN
   const albums = [{
