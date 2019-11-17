@@ -4,7 +4,7 @@ import expectExport from 'expect';
 
 import Image from './Image.js';
 
-test('dynamic class flag', () => {
+test('dynamic css style include background-color', () => {
     const wrapper = shallow(<Image
         baseUrl={"http://domain.com/image.jpg"}
         productUrl={"http://domain.com/product"}
@@ -14,6 +14,6 @@ test('dynamic class flag', () => {
         allAlbums={[{id:"albumid1"}, {id:"albumid2"}]}
         addAlbum={null}
         removeAlbum={null} />);
-    expect(wrapper.find("div.flag-2")).toHaveLength(1);
-
+    const style = wrapper.find("div.flag div").prop('style');
+    expect(style).toHaveProperty('backgroundColor');
 });

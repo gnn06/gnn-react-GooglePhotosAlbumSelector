@@ -25,14 +25,20 @@ export default class Image extends React.Component {
     }
   
     render() {
+      
       return <div className="image-with-flag">
                   <a href={this.props.productUrl}><img src={this.props.baseUrl} alt=""/></a>
                   <div className="flag" >
                     { this.props.albums 
                       && this.props.albums
-                        .map((item, index) => 
-                          <div className={AlbumUtil.getAlbumFlagClass(item.id, this.props.allAlbums)} 
-                            key={index}>{item.title}</div>)}    
+                        .map((item, index) => {
+                          const divStyle = {
+                            backgroundColor: AlbumUtil.getAlbumFlagClass(item.id)
+                          };
+                          return <div style={divStyle}
+                            key={index}>{item.title}</div>    
+                        })
+                    }
                   </div>
                 </div>; 
     }

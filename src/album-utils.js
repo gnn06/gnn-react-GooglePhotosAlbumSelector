@@ -1,3 +1,5 @@
+import randomcolor from 'randomcolor';
+
 export function filterOneAlbum(list, albumsToHide) {
     const result = list.filter(photo => !(albumsToHide && hasAllAlbumToHide(photo.albums, albumsToHide)))
     return result;
@@ -52,8 +54,13 @@ export function filterDate(photos, dateFilter) {
     });
 }
 
-export function getAlbumFlagClass(albumId, albums) {
-    const indice = albums.findIndex(item =>  
-        item.id == albumId) + 1;
-    return indice >= 1 ? "flag-" + indice : "";
+var colors = new Map();
+
+export function getAlbumFlagClass(albumId) {
+    var color = colors.get(albumId);
+    if (color === undefined) {
+        color = randomcolor();
+        colors.set(albumId, color);
+    }
+    return color;
 }

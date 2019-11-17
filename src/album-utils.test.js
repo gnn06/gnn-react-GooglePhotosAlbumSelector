@@ -175,11 +175,12 @@ describe('filterDate', () => {
 });
 
 test('getAlbumFlagClass', () => {
-    const result = AlbumUtil.getAlbumFlagClass('albumid1', [{id: "albumid1"}, {id: "albumid2"}]);
-    expect(result).toEqual("flag-1");
-});
-
-test('getAlbumFlagClass', () => {
-    const result = AlbumUtil.getAlbumFlagClass('albumid2', [{id: "albumid1"}, {id: "albumid2"}]);
-    expect(result).toEqual("flag-2");
+    const result1 = AlbumUtil.getAlbumFlagClass('albumid1');
+    expect(result1).not.toEqual("");
+    const result2 = AlbumUtil.getAlbumFlagClass('albumid2');
+    expect(result2).not.toEqual("");
+    expect(result1).not.toEqual(result2);
+    const result3 = AlbumUtil.getAlbumFlagClass('albumid2');
+    expect(result3).toEqual(result2);
+    
 });
