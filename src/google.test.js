@@ -249,7 +249,6 @@ test("getPhotos included end + 1 day", () => {
     };
     // THEN
     Google.getPhotos(dateFilter);
-    console.log(global.gapi.client.request.mock.calls[0][0].body.filters);
     expect(global.gapi.client.request.mock.calls[0][0].body.filters).toEqual({
         dateFilter: {
             ranges: [
