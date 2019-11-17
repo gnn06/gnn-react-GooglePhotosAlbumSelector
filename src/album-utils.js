@@ -51,3 +51,9 @@ export function filterDate(photos, dateFilter) {
         && (dateFilter.start == null ? true : photoDate >= dateFilter.start);
     });
 }
+
+export function getAlbumFlagClass(albumId, albums) {
+    const indice = albums.findIndex(item =>  
+        item.id == albumId) + 1;
+    return indice >= 1 ? "flag-" + indice : "";
+}

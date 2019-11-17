@@ -173,3 +173,13 @@ describe('filterDate', () => {
         expect(result).toEqual(photos);
     });
 });
+
+test('getAlbumFlagClass', () => {
+    const result = AlbumUtil.getAlbumFlagClass('albumid1', [{id: "albumid1"}, {id: "albumid2"}]);
+    expect(result).toEqual("flag-1");
+});
+
+test('getAlbumFlagClass', () => {
+    const result = AlbumUtil.getAlbumFlagClass('albumid2', [{id: "albumid1"}, {id: "albumid2"}]);
+    expect(result).toEqual("flag-2");
+});

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import * as AlbumUtil from './album-utils.js';
+
 export default class Image extends React.Component {
 
     constructor(props) {
@@ -26,7 +28,11 @@ export default class Image extends React.Component {
       return <div className="image-with-flag">
                   <a href={this.props.productUrl}><img src={this.props.baseUrl} alt=""/></a>
                   <div className="flag" >
-                    { this.props.albums && this.props.albums.map((item, index) => <div className="flag" key={index}>{item.title}</div>)}    
+                    { this.props.albums 
+                      && this.props.albums
+                        .map((item, index) => 
+                          <div className={AlbumUtil.getAlbumFlagClass(item.id, this.props.allAlbums)} 
+                            key={index}>{item.title}</div>)}    
                   </div>
                 </div>; 
     }

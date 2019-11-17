@@ -79,7 +79,7 @@ export default class ImageList extends React.Component {
         {this.getFilteredPhoto(this.props.photos, this.props.hideAlbum, this.props.dateFilter).map(item =>
           <Image baseUrl={item.baseUrl} productUrl={item.productUrl}
             id={item.id} key={item.id}
-            albums={item.albums}
+            albums={item.albums} allAlbums={this.props.albums}
             addAlbum={this.addAlbum} removeAlbum={this.removeAlbum} />)}
       </InfiniteScroll>
     </div>;

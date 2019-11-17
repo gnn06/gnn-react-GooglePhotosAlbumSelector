@@ -39,20 +39,32 @@ div.flag div {
   width: 40px;
 }
 
-div.flag div:nth-child(1) {
+div.flag-1 {
   background-color: #4ce0ff;
 }
 
-div.flag div:nth-child(2) {
+div.flag-2 {
   background-color: red;
 }
 
-div.flag div:nth-child(3) {
+div.flag-3 {
   background-color: #00ff00;
 }
 
-div.flag div:nth-child(4) {
+div.flag-4 {
   background-color: #f5f500;
+}
+
+div.flag-5 {
+  background-color: blueviolet;
+}
+
+div.flag-6 {
+  background-color: orange;
+}
+
+div.flag-7 {
+  background-color: brown;
 }
 
 div.image-with-flag input {
