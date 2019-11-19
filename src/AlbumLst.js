@@ -51,10 +51,11 @@ export default class AlbumLst extends React.Component {
 
   render() {
     return <div>
-      <button className="btn btn-primary" onClick={this.requestAlbumsDetailsClick}>request albums details</button>
-      
-      <button className="btn btn-primary" onClick={this.hideAlbum}>hide album</button>
-      <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>
+      <button className="btn btn-primary" onClick={this.requestAlbumsDetailsClick}>Récupère albums</button>
+      <div>
+        <button className="btn btn-primary" onClick={this.hideAlbum}>hide album</button>
+        <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>
+      </div>
       <div className="album-list">{this.props.albums.map((item) => 
         <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
         )}

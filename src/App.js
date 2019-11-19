@@ -216,8 +216,11 @@ class App extends React.Component {
       <div className="App container-fluid" >
         <div className="row">
           <div className="album-panel col-3">
-            <div>{ this.state.email }</div>
-            <button className="btn btn-primary" onClick={this.signout}>sign out</button>
+            <div>
+              { this.state.email }
+              <button className="btn btn-primary" onClick={this.signout}>sign out</button>
+            </div>
+            
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
             { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
             { this.state.running ? (<div id="running" className="rounded bg-warning m-1 p-1">Running</div>) : null }
