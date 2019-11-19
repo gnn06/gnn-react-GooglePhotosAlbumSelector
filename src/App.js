@@ -6,11 +6,14 @@ import moment from 'moment';
 // services
 import GooglePhotos from './google.js';
 
+// utils
+import * as Store from './services/store.js';
+import * as AlbumUtil from "./album-utils.js";
+
 import AlbumLst from './AlbumLst.js';
 import ImageList from './ImageLst.js';
 import DateFilter from './DateFilter.js';
-import * as Store from './services/store.js';
-import * as AlbumUtil from "./album-utils.js";
+import NotConnected from './NotConnected.js';
 
 var GoogleAuth; // Google Auth object.
 
@@ -36,6 +39,7 @@ class App extends React.Component {
 
     this.updateSigninStatus = this.updateSigninStatus.bind(this);
     this.start = this.start.bind(this);
+    this.signInHandle = this.signInHandle.bind(this);
     this.signout = this.signout.bind(this);
     this.hideAlbumHandle = this.hideAlbumHandle.bind(this);
     this.showOnlyAlbumHandle = this.showOnlyAlbumHandle.bind(this);
@@ -72,7 +76,7 @@ class App extends React.Component {
     });
   };
 
-  signin() {
+  signInHandle() {
     console.log('sign in start');
     GoogleAuth.signIn();
     console.log('signin end');
@@ -208,13 +212,12 @@ class App extends React.Component {
   }
 
   render () {
-    return (
+    return this.state.email ?
       <div className="App container-fluid" >
         <div className="row">
           <div className="album-panel col-3">
             <div>{ this.state.email }</div>
-            <button onClick={this.signin}>sign in</button>
-            <button onClick={this.signout}>sign out</button>
+            <button className="btn btn-primary" onClick={this.signout}>sign out</button>
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
             { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
             { this.state.running ? (<div id="running" className="rounded bg-warning m-1 p-1">Running</div>) : null }
@@ -239,7 +242,7 @@ class App extends React.Component {
           </div>
         </div>
       </div>
-    );
+      : <NotConnected signInHandle={this.signInHandle}/>;
   }
 }
 
