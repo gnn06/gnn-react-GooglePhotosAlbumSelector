@@ -144,6 +144,7 @@ class App extends React.Component {
 
   requestAlbumsDetailsHandle() {
     var p;
+    this.setState({error: false, running: true});
     if (this.state.error) {
       p = this.requestAlbumsPhotosHandle();
     } else {
@@ -156,6 +157,7 @@ class App extends React.Component {
       if (!this.state.error) {
         this.store_albums();
       }
+      this.setState({ running: false });
     });
     return p;
   }
@@ -165,14 +167,13 @@ class App extends React.Component {
     this.setState({albums: []});
     return GooglePhotos.getAlbums(null, albums => {
         component.setState({albums: this.state.albums.concat(albums)});
-      });
+    });
   }
 
   requestAlbumsPhotosHandle() {
     const albums = this.state.albums;
     const previousAlbums = this.state.previousAlbums;
     var component = this;
-    this.setState({error: false, running: true});
     return GooglePhotos.getAllAlbumDetail(albums, (album) => {
       let albums = component.state.albums;
       const index = albums.findIndex(al => al.id === album.id);
@@ -182,9 +183,7 @@ class App extends React.Component {
       component.setState({albums: albums});
     }, error => {
       component.setState({error: true});
-    }, previousAlbums).finally(function() {
-      component.setState({ running: false });
-    });
+    }, previousAlbums);
   }
 
   requestPhotosHandle() {
