@@ -144,7 +144,7 @@ class App extends React.Component {
 
   requestAlbumsDetailsHandle() {
     var p;
-    this.setState({error: false, running: true});
+    this.setState({running: true});
     if (this.state.error) {
       p = this.requestAlbumsPhotosHandle();
     } else {

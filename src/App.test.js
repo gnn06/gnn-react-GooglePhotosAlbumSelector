@@ -55,9 +55,11 @@ describe('requestAlbumsAndDetails, check reset albums list', () => {
     instance.requestAlbumsHandle = jest.fn().mockResolvedValue();
     instance.requestAlbumsPhotosHandle = jest.fn().mockResolvedValue();
     instance.store_albums = jest.fn();
-    instance.requestAlbumsDetailsHandle();
-    // THEN
-    expect(instance.requestAlbumsHandle).not.toHaveBeenCalled();
+    return instance.requestAlbumsDetailsHandle()
+    .then(() => {
+      // THEN
+      expect(instance.requestAlbumsHandle).not.toHaveBeenCalled();
+    });
   });
   
   test('no error => reset', () => {
