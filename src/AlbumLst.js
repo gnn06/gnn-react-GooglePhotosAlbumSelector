@@ -51,7 +51,7 @@ export default class AlbumLst extends React.Component {
 
   render() {
     let content;
-    if (this.props.albums.length == 0) {
+    if (this.props.albums.length === 0) {
       content = <div className="">Cliquez sur Récupérer albums ou créer un album dans Google Photos</div>;
     } else {
       content = <div>
