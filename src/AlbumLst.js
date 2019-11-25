@@ -50,16 +50,24 @@ export default class AlbumLst extends React.Component {
   }
 
   render() {
+    let content;
+    if (this.props.albums.length == 0) {
+      content = <div className="">Cliquez sur Récupérer albums ou créer un album dans Google Photos</div>;
+    } else {
+      content = <div>
+      <div className="album-list">{this.props.albums.map((item) => 
+      <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
+      )}
+      </div>
+      </div>;
+    }
     return <div>
-      <button className="btn btn-primary" onClick={this.requestAlbumsDetailsClick}>Récupère albums</button>
+    <button className="btn btn-primary" onClick={this.requestAlbumsDetailsClick}>Récupère albums</button>
       <div>
         <button className="btn btn-primary" onClick={this.hideAlbum}>hide album</button>
         <button className="btn btn-primary" onClick={this.showOnlyAlbum}>show only album</button>
       </div>
-      <div className="album-list">{this.props.albums.map((item) => 
-        <Album item={item} key={item.id} selectAlbumHandle={this.selectAlbumHandle}/>
-        )}
-      </div>
+      {content}
     </div>;
   }
 }

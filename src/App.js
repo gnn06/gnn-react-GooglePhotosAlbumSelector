@@ -221,7 +221,7 @@ class App extends React.Component {
             </div>
             
             <DateFilter dateFilter={this.state.dateFilter} dateFilterHandle={this.dateFilterHandle}/>
-            { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Error</div>) : null }
+            { this.state.error ? (<div className="rounded bg-danger m-1 p-1">Erreur survenue. Reessayez de Récupérer les albums ou contrôler.</div>) : null }
             { this.state.running ? (<div id="running" className="rounded bg-warning m-1 p-1">Running</div>) : null }
             <AlbumLst
               albums={this.state.albums}
