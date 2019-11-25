@@ -2,6 +2,7 @@
   "name": "gnn-react-test",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://gorsini.free.fr/google-album-selector",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "date-fns": "^2.6.0",
