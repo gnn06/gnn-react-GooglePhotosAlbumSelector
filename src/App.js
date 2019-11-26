@@ -154,9 +154,8 @@ class App extends React.Component {
       });
     }
     p.then(() => {
-      if (!this.state.error) {
-        this.store_albums();
-      }
+      // store even if error
+      this.store_albums();
       this.setState({ running: false });
     });
     return p;

@@ -77,7 +77,7 @@ describe('requestAlbumsAndDetails, check reset albums list', () => {
       });
   });
 
-  test('if error then don"t store', () => {
+  test('if error then store anyway', () => {
     const wrapper = shallow(<App/>);
     const instance = wrapper.instance();
     wrapper.setState({albums: [{id:"albumid1"}], error: false});
@@ -87,7 +87,7 @@ describe('requestAlbumsAndDetails, check reset albums list', () => {
     return instance.requestAlbumsDetailsHandle()
       .then(() => {
         // THEN
-        expect(instance.store_albums).not.toHaveBeenCalled();
+        expect(instance.store_albums).toHaveBeenCalled();
       });
   });
   
