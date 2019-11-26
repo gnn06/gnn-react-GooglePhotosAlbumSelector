@@ -6,5 +6,7 @@ Application avaiblable at http://gorsini.free.fr/google-album-selector/
 
 ![screenshot](http://gorsini.free.fr/google-album-selector/screenshot.PNG)
 
+The work is far from over.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
