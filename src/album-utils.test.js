@@ -129,7 +129,7 @@ describe('filterDate', () => {
         // GIVEN
         const dateFilter = {
             start: new Date("2019-01-02T00:00:00Z"),
-            end: new Date("2019-01-02T23:59:59Z")
+            end: new Date("2019-01-02T00:00:00Z")
         };
         // WHEN
         const result = AlbumUtil.filterDate(photos, dateFilter);
@@ -152,8 +152,8 @@ describe('filterDate', () => {
     test('filter all', () => {
         // GIVEN        
         const dateFilter = {
-            start: new Date("2019-01-02T08:00:00Z"),
-            end: new Date("2019-01-02T09:00:00Z")
+            start: new Date("2019-01-05T08:00:00Z"),
+            end: new Date("2019-01-10T09:00:00Z")
         };
         // WHEN
         const result = AlbumUtil.filterDate(photos, dateFilter);
@@ -172,6 +172,7 @@ describe('filterDate', () => {
         // THEN
         expect(result).toEqual(photos);
     });
+
 });
 
 test('getAlbumFlagClass', () => {

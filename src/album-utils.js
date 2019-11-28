@@ -1,4 +1,5 @@
 import randomcolor from 'randomcolor';
+import moment from 'moment';
 
 export function filterOneAlbum(list, albumsToHide) {
     const result = list.filter(photo => !(albumsToHide && hasAllAlbumToHide(photo.albums, albumsToHide)))
@@ -49,7 +50,7 @@ export function filterDate(photos, dateFilter) {
     // "2019-10-27T15:15:31Z" = ISO 8601
     return photos.filter(photo => {
         const photoDate = new Date(photo.mediaMetadata.creationTime);
-        return (dateFilter.end == null ? true : photoDate <= dateFilter.end) 
+        return (dateFilter.end == null ? true : photoDate <= moment(dateFilter.end).add(1, "day")) 
         && (dateFilter.start == null ? true : photoDate >= dateFilter.start);
     });
 }
