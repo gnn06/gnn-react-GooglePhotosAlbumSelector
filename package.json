@@ -6,7 +6,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "date-fns": "^2.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "random-int": "^2.0.1",
     "randomcolor": "^0.5.4",
     "react": "^16.9.0",
